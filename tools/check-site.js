@@ -101,9 +101,12 @@ if (!P) {
   if (dupName.length) fail("档案名重复：" + [...new Set(dupName)].join(", "));
   else pass("档案名无重复");
 
-  const noCover = cats.filter((c) => !exists(c.cover));
-  if (noCover.length) fail("分类封面不存在：" + noCover.map((c) => c.cover).join(", "));
-  else pass("分类封面全部存在");
+  // 封面按站点实际请求的 webp 路径校验：原图 jpg/png 只是母本，体积大的那份
+  // 会被裁掉（gallery2.jpg 2.4MB 已裁），所以不能拿 c.cover 原名判存在。
+  const servedCover = (c) => c.cover.replace(/\.(jpe?g|png)$/i, ".webp");
+  const noCover = cats.filter((c) => !exists(servedCover(c)));
+  if (noCover.length) fail("分类封面不存在：" + noCover.map((c) => servedCover(c)).join(", "));
+  else pass("分类封面全部存在（按 webp 交付路径校验）");
 
   const badPage = cats.filter((c) => !exists(c.page));
   if (badPage.length) fail("分类跳转页不存在：" + badPage.map((c) => c.page).join(", "));
@@ -344,6 +347,13 @@ if (PWA) {
     if (/bgm\.mp3/.test(precacheSrc)) warn("sw.js 预缓存里带着 bgm.mp3，首次安装会多下 5 MB");
     if (/\.mp4/.test(precacheSrc)) warn("sw.js 预缓存里带着 mp4，视频不该进预缓存");
     if (!precacheSrc) warn("没能在 sw.js 里定位到 PRECACHE 数组");
+
+    // 引用与实际文件必须对得上：ui.js 会把 bgm.mp3 设成 Audio.src，
+    // 文件不在了，左下角声音开关就静默 404 —— 构建是绿的，功能却坏了。
+    if (/bgm\.mp3/.test(read("ui.js"))) {
+      if (!exists("bgm.mp3")) fail("ui.js 引用了 bgm.mp3，但文件不存在（声音开关会 404）");
+      else pass("bgm.mp3 存在，与 ui.js 的引用一致");
+    }
 
     // 预缓存清单要和 pwa-lib 一致：漏掉新页面就等于离线时打不开
     const listed = (sw.match(/"([^"]+\.(?:html|css|js|png|svg|webp|webmanifest|xml|txt))"/g) || [])
