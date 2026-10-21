@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>记录丢失 · Old Pokémon Pokédex</title>
+
+  <meta name="description" content="请求的路径没有对应的记录。可能是地址写错了，也可能是那条记录被移出了可查阅范围。">
+  <meta name="keywords" content="404,记录丢失,无效路径">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="记录丢失 · Old Pokémon Pokédex">
+  <meta property="og:description" content="请求的路径没有对应的记录。可能是地址写错了，也可能是那条记录被移出了可查阅范围。">
+  <meta property="og:image" content="og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="记录丢失 · Old Pokémon Pokédex">
+  <meta name="twitter:description" content="请求的路径没有对应的记录。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">首页</a>
+      <a href="works.html">图鉴</a>
+      <a href="timeline.html">事件时间线</a>
+      <a href="about.html">关于我们</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="index.html#contact">联系我们</a>
+    </nav>
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="搜索档案..." autocomplete="off">
+    </div>
+  </header>
+
+  <section class="page-title">
+    <h1>记录丢失</h1>
+    <p>ERROR 404 · NO SUCH PATH IN INDEX</p>
+  </section>
+
+  <section class="lost-panel">
+    <div class="lost-code-big">404</div>
+
+    <div class="doc-fields">
+      <div><span>Request</span><b id="lostPath">--</b></div>
+      <div><span>Hits</span><b>0</b></div>
+      <div><span>Error</span><b class="lost-alert">ROUTE NOT FOUND</b></div>
+      <div><span>Action</span><b>返回图鉴</b></div>
+    </div>
+
+    <div class="lost-body">
+      <p>你要找的那一页没有对应的记录。这可能是三件事之一：</p>
+      <p>地址写错了；记录被移到了别处；或者那条记录从来就不该被写下来。</p>
+      <p>第三种情况的处理流程不在公开文档里，我们也不建议你追问。</p>
+    </div>
+
+    <!-- 三条最近归档由 data/render.js 按 found 字段排序生成 -->
+    <h2 class="doc-h">最近归档</h2>
+    <ul class="lost-suggest" data-lost-suggest></ul>
+
+    <div class="lost-actions">
+      <a class="lost-btn" href="index.html">← 返回首页</a>
+      <a class="lost-btn" href="works.html">前往图鉴</a>
+      <a class="lost-btn" href="sitemap.html">系统索引</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+    <div class="foot-time">
+      系统时间 <strong>----</strong>
+    </div>
+  </footer>
+
+  <!-- 顺序不能变：数据 → 渲染 → 交互 -->
+  <script src="data/entries.js"></script>
+  <script src="data/img-info.js"></script>
+  <script src="data/render.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+    }
+    // 把真实访问的路径显示出来：静态站拿不到服务端信息，只能读 location
+    const lp = document.getElementById("lostPath");
+    if (lp) {
+      const p = location.pathname.split("/").pop() || "/";
+      lp.textContent = decodeURIComponent(p).slice(0, 60);
+    }
+  </script>
+</body>
+</html>

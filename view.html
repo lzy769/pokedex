@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>调取档案中... · Old Pokémon Pokédex</title>
+
+  <meta name="description" content="档案详情页：按编号调取某条档案的影像、导语与完整记录。">
+  <meta name="keywords" content="档案详情,编号检索,个体档案">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="调取档案中... · Old Pokémon Pokédex">
+  <meta property="og:description" content="档案详情页：按编号调取某条档案的影像、导语与完整记录。">
+  <meta property="og:image" content="hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="调取档案中... · Old Pokémon Pokédex">
+  <meta name="twitter:description" content="档案详情页：按编号调取某条档案的影像、导语与完整记录。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">首页</a>
+      <a href="works.html">图鉴</a>
+      <a href="timeline.html">事件时间线</a>
+      <a href="about.html">关于我们</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="index.html#contact">联系我们</a>
+    </nav>
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="搜索档案..." autocomplete="off">
+    </div>
+  </header>
+
+  <!-- 内容全部由 data/entries.js 按 ?id= 填入，这个文件不再保存任何档案数据 -->
+  <div class="image-container">
+    <div class="blood-warning">BLOOD SAMPLE DETECTED</div>
+    <div class="blood-warning right">DO NOT OPEN // LETHAL</div>
+    <img loading="lazy" decoding="async" class="dynamic-hero" id="monsterImg" src="" alt="加载中">
+  </div>
+
+  <section class="work-content">
+    <!-- 面包屑：图鉴 / 所属档案室 / 当前编号，由 render.js 填 -->
+    <nav class="crumb" id="monsterCrumb" aria-label="面包屑"></nav>
+
+    <h1 id="monsterName">加载中...</h1>
+
+    <!-- 文档头的四格元数据，由 render.js 按 ?id= 填入 -->
+    <div class="doc-fields">
+      <div><span>Item #</span><b id="docItem">--</b></div>
+      <div><span>Object Class</span><b id="docClass">--</b></div>
+      <div><span>Sector</span><b id="docSector">--</b></div>
+      <div><span>Recovery</span><b id="docRecovery">PENDING</b></div>
+    </div>
+
+    <div class="meta" id="monsterMeta">2026 · 绝密档案 · 待调查</div>
+
+    <p class="lead" id="monsterLead">正在从数据库调取数据...</p>
+
+    <!-- 标签，点一下走图鉴页的标签聚合 -->
+    <div class="entry-tags" id="monsterTags" hidden></div>
+
+    <!-- 特殊收容措施（三段式的第一段） -->
+    <section class="doc-block containment-block" id="monsterContainment" hidden></section>
+
+    <!-- 正文：按现有七小节结构（长相／身高／体重／性格／能力／智力／威胁等级） -->
+    <div class="entry-desc doc-block" id="monsterDesc">
+      <noscript><p>需要开启 JavaScript 才能查看档案内容。</p></noscript>
+    </div>
+
+    <!-- 附录 / 观测日志，可折叠 -->
+    <section class="doc-block addenda-block" id="monsterAddenda" hidden></section>
+
+    <!-- 现场附件照片，点击走灯箱 -->
+    <section class="doc-block photos-block" id="monsterPhotos" hidden></section>
+
+    <!-- 关联档案推荐 -->
+    <section class="doc-block related-block" id="monsterRelated" hidden></section>
+
+    <nav class="entry-nav" data-entry-nav aria-label="档案翻页"></nav>
+    <a class="back-link" href="works.html" data-back-category>← 返回档案室</a>
+  </section>
+
+  <footer>
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+    <div class="foot-time">
+      系统时间 <strong>----</strong>
+    </div>
+  </footer>
+
+  <!-- 顺序不能变：数据 → 渲染 → 交互 -->
+  <script src="data/entries.js"></script>
+  <script src="data/img-info.js"></script>
+  <script src="data/render.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+    }
+  </script>
+</body>
+</html>

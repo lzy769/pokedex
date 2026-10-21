@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Old Pokémon Pokédex · 首页</title>
+
+  <meta name="description" content="老可梦图鉴首页：三道分类入口、异常信号雷达与留言入口。">
+  <meta name="keywords" content="老可梦图鉴,Old Pokémon Pokédex,档案室,怪异档案,图鉴">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Old Pokémon Pokédex · 首页">
+  <meta property="og:description" content="老可梦图鉴首页：三道分类入口、异常信号雷达与留言入口。">
+  <meta property="og:image" content="hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Old Pokémon Pokédex · 首页">
+  <meta name="twitter:description" content="老可梦图鉴首页：三道分类入口、异常信号雷达与留言入口。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <!-- 开屏动画 -->
+  <div id="intro">
+    <div class="intro-text">
+      <span>O</span><span>L</span><span>D</span><span>·</span><span>P</span><span>O</span><span>K</span><span>É</span><span>D</span><span>E</span><span>X</span>
+    </div>
+  </div>
+
+  <!-- 顶部导航 -->
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="#hero" class="active">首页</a>
+      <a href="works.html">图鉴</a>
+      <a href="timeline.html">事件时间线</a>
+      <a href="about.html">关于我们</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="#contact">联系我们</a>
+    </nav>
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="搜索档案..." autocomplete="off">
+    </div>
+  </header>
+
+  <!-- 首屏 Hero 区域 -->
+    <section class="hero" id="hero">
+    <!-- 加这一行，就是背后的巨大水印 -->
+    <div class="hero-bg-text">CLASSIFIED</div>
+
+    <div class="hero-kicker">SECTOR 07 · SUBLEVEL ARCHIVE</div>
+    <h1 id="typed"><span class="cursor-blink"></span></h1>
+    <p>深耕志怪领域，只为向世界展现猎奇与未知</p>
+    <div class="hero-meta">FILE NO. 000 · OLDPOKEDEX.ARCHIVE</div>
+
+    <!-- 档案封面上的元数据：编号 / 分级 / 权限 / 状态 -->
+    <div class="hero-dossier">
+      <div><span>Item #</span><b>000</b></div>
+      <div><span>Object Class</span><b>THAUMIEL</b></div>
+      <div><span>Clearance</span><b>LEVEL 3</b></div>
+      <div><span>Status</span><b class="warn">ACTIVE INCIDENT</b></div>
+    </div>
+  </section>
+
+    <!-- 数据统计区 (修复排版) -->
+  <div class="panel-wrapper reveal">
+    <section class="stats">
+      <div class="file-tag">档案 #001 · 解密中</div>
+      <div class="stat">
+        <div class="num" data-target="10">0</div>
+        <div class="label">疯狂年</div>
+        <div class="bar"></div>
+      </div>
+      <div class="stat">
+        <div class="num" data-target="200">0</div>
+        <div class="label">因调查死亡人数</div>
+        <div class="bar"></div>
+      </div>
+      <div class="stat">
+        <div class="num" data-target="500">0</div>
+        <div class="label">完成项目</div>
+        <div class="bar"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 档案解密进度：读的是本机 localStorage 记录，由 ui.js 填充 -->
+  <div class="panel-wrapper reveal">
+    <section class="decrypt-panel" data-decrypt-progress>
+      <div class="dp-head">
+        <span class="dp-label">档案解密进度</span>
+        <span class="dp-count">读取本机记录中…</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- 画廊筛选与展示区 -->
+  <section class="gallery reveal">
+    <div class="file-tag">档案 #002 · 待归档</div>
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">全部</button>
+      <button class="filter-btn" data-filter="远古恐惧">远古恐惧</button>
+      <button class="filter-btn" data-filter="未知之厄">未知之厄</button>
+      <button class="filter-btn" data-filter="人类希望">人类希望</button>
+    </div>
+    
+    <!-- 如果你的图片和名字变了，只改下面这里的 img 的 src 和 figcaption -->
+    <figure data-cat="远古恐惧">
+      <a href="work1.html"><img loading="lazy" decoding="async" src="gallery1.webp" srcset="gallery1-800.webp 800w, gallery1.webp 1280w" sizes="(max-width: 560px) 92vw, (max-width: 980px) 46vw, 340px" width="1280" height="1707" alt="狞笑之杰"></a>
+      <figcaption>狞笑之杰</figcaption>
+    </figure>
+    <figure data-cat="远古恐惧">
+      <a href="work2.html"><img loading="lazy" decoding="async" src="gallery2.webp" srcset="gallery2-800.webp 800w, gallery2.webp 1206w" sizes="(max-width: 560px) 92vw, (max-width: 980px) 46vw, 340px" width="1206" height="2622" alt="青花瓷"></a>
+      <figcaption>青花瓷</figcaption>
+    </figure>
+    <figure data-cat="远古恐惧">
+      <a href="work3.html"><img loading="lazy" decoding="async" src="gallery3.webp" srcset="gallery3-800.webp 800w, gallery3.webp 1280w" sizes="(max-width: 560px) 92vw, (max-width: 980px) 46vw, 340px" width="1280" height="1706" alt="青鬼"></a>
+      <figcaption>青鬼</figcaption>
+    </figure>
+    <figure data-cat="人类希望">
+      <a href="work4.html"><img loading="lazy" decoding="async" src="gallery4.webp" srcset="gallery4-800.webp 800w, gallery4.webp 1920w" sizes="(max-width: 560px) 92vw, (max-width: 980px) 46vw, 340px" width="1920" height="1080" alt="反常"></a>
+      <figcaption>反常</figcaption>
+    </figure>
+  </section>
+
+  <!-- 图鉴总入口卡片 -->
+  <section class="cards reveal" id="cards">
+    <div class="file-tag">档案 #003 · 活跃</div>
+    <a class="card" href="works1.html">
+      <h3>远古恐惧</h3>
+      <p>人类历史上的恶魔。</p>
+    </a>
+    <a class="card" href="works2.html">
+      <h3>未知之厄</h3>
+      <p>灾难发起者。</p>
+    </a>
+    <a class="card" href="works3.html">
+      <h3>人类希望</h3>
+      <p>反抗阵营。</p>
+    </a>
+  </section>
+  <!-- 新增：全球异常监测网分区 -->
+  <section class="radar-section reveal">
+    <div class="file-tag">档案 #005 · 异常追踪</div>
+    <h2 class="section-title">全球异常监测网</h2>
+    <p class="section-desc">实时捕捉正在发生的未知事件。点击信号点可接入现场。</p>
+    
+    <div class="radar-map">
+      <!-- 雷达光波 -->
+      <div class="radar-sweep"></div>
+      <div class="radar-circle c1"></div>
+      <div class="radar-circle c2"></div>
+      <div class="radar-circle c3"></div>
+      
+      <!-- 闪烁的异常信号点 -->
+      <a href="works1.html" class="signal-point" style="top: 30%; left: 40%;">
+        <span class="ping"></span> 河源实验中学
+      </a>
+      <a href="works2.html" class="signal-point" style="top: 60%; left: 70%;">
+        <span class="ping"></span> 益和花园
+      </a>
+      <a href="works3.html" class="signal-point" style="top: 45%; left: 20%;">
+        <span class="ping"></span> 文化广场
+      </a>
+      <!-- 下面三个点原来指向不存在的 works4/5/6.html，且 <a> 没有闭合。
+           暂时统一指向图鉴页，等这三处地点有专属档案后再改成 view.html?id=N。 -->
+      <a href="works.html" class="signal-point" style="top: 25%; left: 10%;">
+        <span class="ping"></span> 万隆城
+      </a>
+      <a href="works.html" class="signal-point" style="top: 75%; left: 50%;">
+        <span class="ping"></span> 沃尔玛
+      </a>
+      <a href="works.html" class="signal-point" style="top: 65%; left: 90%;">
+        <span class="ping"></span> 坚基
+      </a>
+    </div>
+  </section>
+  <!-- 留言表单 -->
+  <section class="contact-form reveal">
+    <div class="file-tag">档案 #004 · 待接收</div>
+    <h2>加入我们</h2>
+    <!-- 记得把下面的 action 里的 xxxxxxxx 换成你自己的 Formspree ID -->
+    <form id="contactForm" action="https://formspree.io/f/xxxxxxxx" method="POST">
+      <input type="text" name="name" placeholder="你的名字" required>
+      <input type="email" name="email" placeholder="你的邮箱" required>
+      <textarea name="message" placeholder="想说的话" required></textarea>
+      <button type="submit">发送</button>
+      <div class="form-feedback" id="contactFeedback" role="status" aria-live="polite"></div>
+    </form>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="reveal" id="contact">
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+    <div class="foot-time">
+      系统时间 <strong>----</strong>
+    </div>
+    <!-- 站点访问计数：数据由 .github/workflows/traffic.yml 回写；没有数据时整块隐藏 -->
+    <div class="foot-traffic" data-traffic hidden></div>
+  </footer>
+
+  <!-- 回到顶部按钮 -->
+  <button class="to-top" id="toTop" title="回到顶部">↑</button>
+
+  <!-- 引入公共脚本 -->
+  <script src="intro.js"></script>
+  <!-- 档案数据：首页也有搜索框，没有这份数据就只能搜到页面标题、搜不到 11 条档案 -->
+  <script src="data/entries.js"></script>
+  <script src="data/img-info.js"></script>
+  <script src="data/traffic.js"></script>
+  <script src="data/render.js"></script>
+  <script src="ui.js"></script>
+
+  <!-- 首页专属脚本（打字机、数字滚动、表单提交等） -->
+  <script>
+    // 1. 打字机效果
+    const typed = document.getElementById("typed");
+    const text = "走向世界尽头";
+    let i = 0;
+    function typeLoop() {
+      if (!typed) return;
+      if (i <= text.length) {
+        typed.innerHTML = text.slice(0, i) + '<span class="cursor-blink"></span>';
+        i++;
+        setTimeout(typeLoop, 200);
+      }
+    }
+    setTimeout(typeLoop, 1800);
+
+    // 2. 回到顶部
+    const toTop = document.getElementById("toTop");
+    if (toTop) {
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) toTop.classList.add("show");
+        else toTop.classList.remove("show");
+      });
+      toTop.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }));
+    }
+
+    // 3. 导航高亮
+    const sections = [
+      { id: "hero", link: document.querySelector('nav a[href="#hero"]') },
+      { id: "cards", link: document.querySelector('nav a[href="#cards"]') },
+      { id: "contact", link: document.querySelector('nav a[href="#contact"]') }
+    ];
+    window.addEventListener("scroll", () => {
+      let current = sections[0];
+      sections.forEach(s => {
+        const el = document.getElementById(s.id);
+        if (el && el.getBoundingClientRect().top <= 100) current = s;
+      });
+      sections.forEach(s => s.link && s.link.classList.remove("active"));
+      if (current && current.link) current.link.classList.add("active");
+    });
+
+    // 4. 滚动渐入动画
+    const reveals = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    reveals.forEach(el => io.observe(el));
+
+    // 5. Hero 视差
+    const hero = document.getElementById("hero");
+    if (hero) {
+      hero.addEventListener("mousemove", e => {
+        const rect = hero.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        hero.style.backgroundPosition =
+          `calc(50% + ${x * -20}px) calc(50% + ${y * -20}px)`;
+      });
+      hero.addEventListener("mouseleave", () =>
+        hero.style.backgroundPosition = "center");
+    }
+
+    // 6. 数字滚动
+    const nums = document.querySelectorAll(".stat .num");
+    const numsIO = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseInt(el.dataset.target, 10);
+        const duration = 800;
+        const start = performance.now();
+        function tick(now) {
+          const p = Math.min((now - start) / duration, 1);
+          el.textContent = Math.floor(p * target) + (p === 1 ? "+" : "");
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        numsIO.unobserve(el);
+      });
+    }, { threshold: 0.4 });
+    nums.forEach(el => numsIO.observe(el));
+
+    // 7. 留言表单提交：前端校验 + 内联反馈（不弹 alert，保持站点氛围）
+    const contactForm = document.getElementById("contactForm");
+    if (contactForm) {
+      const feedback = document.getElementById("contactFeedback");
+      const setFeedback = (kind, msg) => {
+        if (!feedback) return;
+        feedback.textContent = msg;
+        feedback.className = "form-feedback " + kind;
+      };
+
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      contactForm.addEventListener("submit", async e => {
+        e.preventDefault();
+        const name = (contactForm.elements["name"].value || "").trim();
+        const email = (contactForm.elements["email"].value || "").trim();
+        const message = (contactForm.elements["message"].value || "").trim();
+
+        if (name.length < 2) { setFeedback("error", "请填写你的名字（至少 2 个字）。"); return; }
+        if (!emailRe.test(email)) { setFeedback("error", "邮箱格式看起来不对，请检查一下。"); return; }
+        if (message.length < 5) { setFeedback("error", "想说的内容太少了，再多写一点吧。"); return; }
+
+        // action 里的 Formspree ID 还是占位符时，直接提示，不要发必然失败的请求
+        if (/xxxxxxxx/.test(contactForm.action)) {
+          setFeedback("error", "留言服务还没配置：请把表单 action 里的 xxxxxxxx 换成你自己的 Formspree ID 后再提交。");
+          return;
+        }
+
+        setFeedback("", "正在发送…");
+        try {
+          const res = await fetch(contactForm.action, {
+            method: "POST",
+            body: new FormData(contactForm),
+            headers: { "Accept": "application/json" }
+          });
+          if (res.ok) {
+            setFeedback("ok", "谢谢你的留言！我会尽快回复你。");
+            contactForm.reset();
+          } else {
+            setFeedback("error", "发送失败（服务返回 " + res.status + "），请稍后再试。");
+          }
+        } catch (err) {
+          setFeedback("error", "网络错误，请稍后再试。");
+        }
+      });
+    }
+
+    // 8. 手机端汉堡菜单
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => {
+        mainNav.classList.toggle("open");
+      });
+    }
+  </script>
+</body>
+</html>

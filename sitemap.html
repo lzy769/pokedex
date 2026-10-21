@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>系统索引 · Old Pokémon Pokédex</title>
+
+  <meta name="description" content="全站页面与全部档案的链接索引。">
+  <meta name="keywords" content="索引,站点地图,档案列表,链接">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="系统索引 · Old Pokémon Pokédex">
+  <meta property="og:description" content="全站页面与全部档案的链接索引。">
+  <meta property="og:image" content="hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="系统索引 · Old Pokémon Pokédex">
+  <meta name="twitter:description" content="全站页面与全部档案的链接索引。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">首页</a>
+      <a href="works.html">图鉴</a>
+      <a href="timeline.html">事件时间线</a>
+      <a href="about.html">关于我们</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="index.html#contact">联系我们</a>
+    </nav>
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="搜索档案..." autocomplete="off">
+    </div>
+  </header>
+
+  <section class="page-title">
+    <h1>系统索引</h1>
+    <p>所有数据节点及物理坐标</p>
+  </section>
+
+  <section class="sys-index">
+    <div class="sys-group">
+      <h2>主系统</h2>
+      <ul class="sys-list">
+        <li><a href="index.html"><span>首页控制台</span> <span class="file-id">INDEX.HTML</span></a></li>
+        <li><a href="works.html"><span>档案室图鉴</span> <span class="file-id">WORKS.HTML</span></a></li>
+        <li><a href="timeline.html"><span>事件时间线</span> <span class="file-id">TIMELINE.HTML</span></a></li>
+        <li><a href="changelog.html"><span>更新日志</span> <span class="file-id">CHANGELOG.HTML</span></a></li>
+        <li><a href="about.html"><span>关于我们</span> <span class="file-id">ABOUT.HTML</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sys-group">
+      <h2>档案室 (分目录)</h2>
+      <ul class="sys-list">
+        <li><a href="works1.html"><span>远古恐惧</span> <span class="file-id">WORKS1.HTML</span></a></li>
+        <li><a href="works2.html"><span>未知之厄</span> <span class="file-id">WORKS2.HTML</span></a></li>
+        <li><a href="works3.html"><span>人类希望</span> <span class="file-id">WORKS3.HTML</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sys-group">
+      <h2>绝密个体档案</h2>
+      <!-- 11 条档案由 data/entries.js 渲染，以后加档案这里会自动变长 -->
+      <ul class="sys-list" data-entry-index></ul>
+    </div>
+
+    <div class="sys-group" id="tags">
+      <h2>标签索引</h2>
+      <!-- 标签与计数同样来自 data/entries.js，点进去是 works.html?tag=… 聚合结果 -->
+      <div class="tag-cloud" data-tag-index></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+    <div class="foot-time">
+      系统时间 <strong>----</strong>
+    </div>
+  </footer>
+
+  <script src="data/entries.js"></script>
+  <script src="data/img-info.js"></script>
+  <script src="data/render.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+    }
+  </script>
+</body>
+</html>

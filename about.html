@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>关于我们 · Old Pokémon Pokédex</title>
+
+  <meta name="description" content="关于这个档案室的来历、立场与联系方式。">
+  <meta name="keywords" content="关于我们,联系,档案室,来路">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="关于我们 · Old Pokémon Pokédex">
+  <meta property="og:description" content="关于这个档案室的来历、立场与联系方式。">
+  <meta property="og:image" content="hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="关于我们 · Old Pokémon Pokédex">
+  <meta name="twitter:description" content="关于这个档案室的来历、立场与联系方式。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">首页</a>
+      <a href="works.html">图鉴</a>
+      <a href="about.html" class="active">关于我们</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="index.html#contact">联系我们</a>
+    </nav>
+  </header>
+
+  <section class="page-title">
+    <h1>关于我们</h1>
+    <p>深耕志怪领域，只为向世界展现猎奇与未知</p>
+  </section>
+
+  <section class="about-content">
+    <p>老可梦图鉴成立于 2015 年，是一支专注于志怪题材的创作团队。我们把散落在乡野传说中的碎片重新收集，用一种当代的视角去讲述那些被时间遗忘的故事。</p>
+    <p>我们相信，未知本身就有一种吸引力。它藏在老照片边缘，藏在方言的尾音里，藏在一个没讲完的故事里。我们的工作，就是把这些东西一件一件带回光里。</p>
+    <p>目前团队共有 12 人，分工覆盖田野调查、文本整理、视觉设计、出版与展览。我们与国内多家出版社、美术馆、独立书店保持长期合作。</p>
+    <p>如果你想和我们聊聊，欢迎通过首页下方的联系方式找到我们。</p>
+  </section>
+
+  <footer>
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById("cursor");
+    document.addEventListener("mousemove", e => {
+      cursor.style.left = e.clientX + "px";
+      cursor.style.top = e.clientY + "px";
+    });
+    document.querySelectorAll("a, button").forEach(el => {
+      el.addEventListener("mouseenter", () => cursor.classList.add("big"));
+      el.addEventListener("mouseleave", () => cursor.classList.remove("big"));
+    });
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+    }
+  </script>
+<script src="ui.js"></script></body>
+</html>

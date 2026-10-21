@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>更新日志 · Old Pokémon Pokédex</title>
+
+  <meta name="description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.3.0（2026-10-21）。">
+  <meta name="keywords" content="更新日志,更新记录,changelog,RSS">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="更新日志 · Old Pokémon Pokédex">
+  <meta property="og:description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.3.0（2026-10-21）。">
+  <meta property="og:image" content="og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="更新日志 · Old Pokémon Pokédex">
+  <meta name="twitter:description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.3.0（2026-10-21）。">
+  <link rel="alternate" type="application/rss+xml" title="老可梦图鉴 更新日志" href="feed.xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">首页</a>
+      <a href="works.html">图鉴</a>
+      <a href="timeline.html">事件时间线</a>
+      <a href="about.html">关于我们</a>
+      <a href="changelog.html" class="active">更新日志</a>
+      <a href="index.html#contact">联系我们</a>
+    </nav>
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="搜索档案..." autocomplete="off">
+    </div>
+  </header>
+
+  <section class="page-title">
+    <h1>更新日志</h1>
+    <p>共 5 次更新 · 最新一次 2026-10-21 · <a href="feed.xml">RSS 订阅</a></p>
+  </section>
+
+  <!-- 本页由 tools/build-feed.js 生成。要改内容请改脚本里的 RELEASES 再跑一次，不要手改本文件。 -->
+  <ol class="changelog">
+    <li class="cl-item">
+      <div class="cl-head">
+        <span class="cl-ver">v1.3.0</span>
+        <time class="cl-date" datetime="2026-10-21">2026-10-21</time>
+      </div>
+      <h2 class="cl-title">档案室扩建：收容措施、附录与检索</h2>
+      <ul class="cl-body">
+        <li>11 条档案全部补上「特殊收容措施」与「描述」正文段</li>
+        <li>每条档案新增 1–2 篇折叠式观测日志（附录 A / 附录 B）</li>
+        <li>档案互链：正文里出现「见 004」即可点击跳转</li>
+        <li>新增事件时间线页，按发现日期汇总全部记录</li>
+        <li>附件照片：部分档案附带现场照片，可点开灯箱</li>
+        <li>标签系统：模因 / 物理 / 认知危害，点标签聚合同类档案</li>
+        <li>高级筛选：威胁等级 + 发现年份 + 回收地点</li>
+        <li>详情页底部新增「相关档案」推荐与面包屑导航</li>
+        <li>搜索结果支持高亮与相关度排序</li>
+        <li>涂黑条：部分内容可点开，部分内容永久删除</li>
+      </ul>
+    </li>
+    <li class="cl-item">
+      <div class="cl-head">
+        <span class="cl-ver">v1.2.0</span>
+        <time class="cl-date" datetime="2026-10-20">2026-10-20</time>
+      </div>
+      <h2 class="cl-title">视觉改版：SCP 档案库 × 后室荧光走廊</h2>
+      <ul class="cl-body">
+        <li>配色由青色霓虹改为昏暗琥珀荧光，全站方角、1px 细线</li>
+        <li>新增顶部系统状态栏与扫描线覆盖层</li>
+        <li>面板化重排：统计 / 图鉴 / 分类 / 雷达 / 表单统一装订角</li>
+        <li>详情页改为临床文档版式，新增四格登记表与危险等级色</li>
+        <li>导航自动编号，正文改用衬线字体</li>
+        <li>新增 prefers-reduced-motion 适配，尊重系统减弱动效设置</li>
+      </ul>
+    </li>
+    <li class="cl-item">
+      <div class="cl-head">
+        <span class="cl-ver">v1.1.0</span>
+        <time class="cl-date" datetime="2026-10-19">2026-10-19</time>
+      </div>
+      <h2 class="cl-title">检索、无障碍与分享</h2>
+      <ul class="cl-body">
+        <li>档案室新增威胁等级筛选与编号排序</li>
+        <li>详情页支持 ←/→ 键盘翻页与上一条/下一条导航</li>
+        <li>联系表单改为前端校验 + 内联提示，不再弹窗</li>
+        <li>补全 13 个页面的 SEO meta、Open Graph 与 favicon</li>
+        <li>生成 sitemap.xml 与 robots.txt</li>
+        <li>修复缺失的 .hidden 规则（此前画廊筛选实际无效）</li>
+        <li>修复 view.html 中 3 处 &lt;&lt;p 标签拼写错误</li>
+      </ul>
+    </li>
+    <li class="cl-item">
+      <div class="cl-head">
+        <span class="cl-ver">v1.0.0</span>
+        <time class="cl-date" datetime="2026-10-18">2026-10-18</time>
+      </div>
+      <h2 class="cl-title">单数据源重构</h2>
+      <ul class="cl-body">
+        <li>11 条档案数据集中到 data/entries.js，页面不再各写一份</li>
+        <li>新增 data/render.js 渲染层，图鉴/详情/索引由数据生成</li>
+        <li>11 条档案补全七节正文（长相 / 身高 / 体重 / 性格 / 能力 / 智力 / 威胁等级）</li>
+        <li>新增 tools/check-site.js 静态自检与 tools/smoke-render.js 渲染冒烟测试</li>
+        <li>图片补 loading=lazy，背景音乐改为按需加载</li>
+      </ul>
+    </li>
+    <li class="cl-item">
+      <div class="cl-head">
+        <span class="cl-ver">v0.9.0</span>
+        <time class="cl-date" datetime="2026-10-17">2026-10-17</time>
+      </div>
+      <h2 class="cl-title">站点导入</h2>
+      <ul class="cl-body">
+        <li>迁入 11 件档案、图鉴总览、分类页与详情页</li>
+        <li>补全全部页面的 viewport 与 lang 属性</li>
+        <li>修正卡片名与详情页名不一致的问题</li>
+      </ul>
+    </li>
+  </ol>
+
+  <footer>
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+    <div class="foot-time">
+      系统时间 <strong>----</strong>
+    </div>
+  </footer>
+
+  <!-- 档案数据：本页也有搜索框 -->
+  <script src="data/entries.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+    }
+  </script>
+</body>
+</html>

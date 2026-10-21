@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>图鉴 · Old Pokémon Pokédex</title>
+
+  <meta name="description" content="档案室总览，按「远古恐惧 / 未知之厄 / 人类希望」三大分类浏览。">
+  <meta name="keywords" content="图鉴,分类,远古恐惧,未知之厄,人类希望">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="图鉴 · Old Pokémon Pokédex">
+  <meta property="og:description" content="档案室总览，按「远古恐惧 / 未知之厄 / 人类希望」三大分类浏览。">
+  <meta property="og:image" content="hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="图鉴 · Old Pokémon Pokédex">
+  <meta name="twitter:description" content="档案室总览，按「远古恐惧 / 未知之厄 / 人类希望」三大分类浏览。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">首页</a>
+      <a href="works.html" class="active">图鉴</a>
+      <a href="timeline.html">事件时间线</a>
+      <a href="about.html">关于我们</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="index.html#contact">联系我们</a>
+    </nav>
+    <!-- 补上了搜索框 -->
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="搜索档案..." autocomplete="off">
+    </div>
+  </header>
+
+  <section class="page-title">
+    <h1>图鉴</h1>
+    <p>按分类浏览团队收录的影像与档案</p>
+  </section>
+
+  <!-- 三个分类入口由 data/entries.js + data/render.js 渲染，改分类名只需改数据 -->
+  <section class="entry-grid" data-category-list></section>
+
+  <!-- 只有在 ?tag=xxx 时才显示：该标签下的全部档案 -->
+  <section class="tag-results" data-tag-results hidden></section>
+
+  <footer>
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+    <div class="foot-time">
+      系统时间 <strong>----</strong>
+    </div>
+  </footer>
+
+  <script src="data/entries.js"></script>
+  <script src="data/img-info.js"></script>
+  <script src="data/render.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+    }
+  </script>
+</body>
+</html>

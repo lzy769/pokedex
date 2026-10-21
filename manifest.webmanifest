@@ -1,0 +1,36 @@
+{
+  "name": "老可梦图鉴 · Old Pokémon Pokédex",
+  "short_name": "老可梦图鉴",
+  "description": "一份不该被公开查阅的档案库。11 条记录，3 个档案室，越早的事越不可靠。",
+  "lang": "zh-CN",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a08",
+  "theme_color": "#0a0a08",
+  "categories": [
+    "education",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

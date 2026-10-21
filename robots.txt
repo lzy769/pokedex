@@ -1,0 +1,6 @@
+# 老可梦图鉴 robots.txt
+# 上线后把下面的 Sitemap 改成你的域名，例如 https://你的域名/sitemap.xml
+User-agent: *
+Allow: /
+
+Sitemap: /sitemap.xml

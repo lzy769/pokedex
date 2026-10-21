@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ERROR_404_CORRUPTED</title>
+
+  <meta name="description" content="站点损坏页 / 404 兜底页。">
+  <meta name="keywords" content="404,损坏,兜底">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ERROR_404_CORRUPTED">
+  <meta property="og:description" content="站点损坏页 / 404 兜底页。">
+  <meta property="og:image" content="hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ERROR_404_CORRUPTED">
+  <meta name="twitter:description" content="站点损坏页 / 404 兜底页。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* 隐藏页面专属的极度崩坏样式 */
+    body { background-color: #050000 !important; }
+    
+    /* 红色故障闪烁标题 */
+    .error-title {
+      color: #ff0000 !important;
+      text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 2px 0 0 #00ffff !important;
+      animation: glitch 0.5s infinite alternate;
+    }
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    /* 红色警告文字 */
+    .warning-text {
+      color: #ff3333 !important;
+      border-left-color: #ff3333 !important;
+      text-shadow: 0 0 5px rgba(255,0,0,0.5);
+    }
+
+    /* 乱码背景遮罩 */
+    .corrupted-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(255, 0, 0, 0.05) 2px,
+        rgba(255, 0, 0, 0.05) 4px
+      );
+      animation: scanline 4s linear infinite;
+    }
+    @keyframes scanline {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 100vh; }
+    }
+
+    /* 数据被损坏的图片效果 */
+    .corrupted-img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(200%) invert(20%) sepia(100%) hue-rotate(300deg) saturate(500%);
+      border-bottom: 2px solid #ff0000;
+      box-shadow: 0 0 30px #ff0000;
+    }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <!-- 屏幕上的红色扫描线特效 -->
+  <div class="corrupted-overlay"></div>
+
+  <header>
+    <div>
+      <div class="brand-en" style="color: #ff0000; text-shadow: 0 0 10px #ff0000;">SYS_ERROR</div>
+      <div class="brand-cn" style="color: #660000;">老可梦图鉴 · 已断开</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">返回现实</a>
+    </nav>
+  </header>
+
+  <!-- 使用你文件夹里的一张图片，并加上损坏滤镜 -->
+  <img loading="lazy" decoding="async" class="corrupted-img" src="hero.webp" srcset="hero-800.webp 800w, hero.webp 1920w" sizes="(max-width: 980px) 92vw, 900px" width="1920" height="1080" alt="[数据已损坏]">
+
+  <section class="work-content">
+    <h1 class="error-title">[ 档案实体已崩溃 ]</h1>
+    <div class="meta" style="color: #ff0000;">????-??-?? · UNKNOWN ENTITY · 极度危险</div>
+
+    <p class="lead" style="color: #ff5555;">你不该输入那个密码的。</p>
+
+    <p class="section-label warning-text">观测日志</p>
+    <p>它发现了你。就在你按下回车键的那一瞬间，它顺着物理网线爬了过去。</p>
+    <p>不要回头看你的房间门，它现在就在你身后，正在慢慢模仿你现在的呼吸频率。如果你听到身后有水滴声，请立刻闭上眼睛，不要试图在屏幕的反光里寻找它的轮廓。</p>
+
+    <p class="section-label warning-text">系统警告</p>
+    <p>本系统已被某种模因污染彻底改写。所有收容的怪物档案均已失效，它们现在就在系统里游荡。</p>
+    <p>你打开的不仅仅是一个页面，而是一个潘多拉魔盒。在它完全吃掉你的脸之前，按下面的按钮离开这里。</p>
+
+    <a class="back-link" href="index.html" style="color: #ff0000; border-color: #ff0000;">← 强制切断电源，逃回首页</a>
+  </section>
+
+  <footer style="border-top: 1px solid #ff0000;">
+    <div class="foot-brand" style="color: #ff0000;">CONNECTION LOST</div>
+    <div class="contact">
+      <div style="color: #ff0000;">SYSTEM FAILURE // OVERWRITTEN</div>
+    </div>
+    <div class="foot-time" style="color: #ff0000;">
+      ERROR <strong style="color: #ff0000;">00:00:00</strong>
+    </div>
+  </footer>
+
+  <script src="ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>事件时间线 · Old Pokémon Pokédex</title>
+
+  <meta name="description" content="按日期排列的事件时间线：每一次发现、每一次收容失效、每一次没有写进正式报告的事。">
+  <meta name="keywords" content="时间线,事件,收容记录,档案年表">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="事件时间线 · Old Pokémon Pokédex">
+  <meta property="og:description" content="按日期排列的事件时间线：每一次发现、每一次收容失效、每一次没有写进正式报告的事。">
+  <meta property="og:image" content="og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="事件时间线 · Old Pokémon Pokédex">
+  <meta name="twitter:description" content="按日期排列的事件时间线：每一次发现、每一次收容失效、每一次没有写进正式报告的事。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">首页</a>
+      <a href="works.html">图鉴</a>
+      <a href="timeline.html" class="active">事件时间线</a>
+      <a href="about.html">关于我们</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="index.html#contact">联系我们</a>
+    </nav>
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="搜索档案..." autocomplete="off">
+    </div>
+  </header>
+
+  <section class="page-title">
+    <h1>事件时间线</h1>
+    <p>按日期排列的全部记录 · 越早的事越不可靠</p>
+  </section>
+
+  <!-- 内容全部由 data/entries.js 的 found / events 字段汇总，改数据即可 -->
+  <ul class="timeline" data-timeline></ul>
+
+  <footer>
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+    <div class="foot-time">
+      系统时间 <strong>----</strong>
+    </div>
+  </footer>
+
+  <!-- 顺序不能变：数据 → 渲染 → 交互 -->
+  <script src="data/entries.js"></script>
+  <script src="data/img-info.js"></script>
+  <script src="data/render.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+    }
+  </script>
+</body>
+</html>

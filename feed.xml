@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>老可梦图鉴 · 更新日志</title>
+  <link>https://lzy769.github.io/xilian/my-site/changelog.html</link>
+  <description>档案库的每一次改动。</description>
+  <language>zh-CN</language>
+  <lastBuildDate>Wed, 21 Oct 2026 01:00:00 GMT</lastBuildDate>
+  <atom:link href="https://lzy769.github.io/xilian/my-site/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>v1.3.0 · 档案室扩建：收容措施、附录与检索</title>
+    <link>https://lzy769.github.io/xilian/my-site/changelog.html#v1.3.0</link>
+    <guid isPermaLink="false">xilian-v1.3.0</guid>
+    <pubDate>Wed, 21 Oct 2026 01:00:00 GMT</pubDate>
+    <description>  • 11 条档案全部补上「特殊收容措施」与「描述」正文段
+  • 每条档案新增 1–2 篇折叠式观测日志（附录 A / 附录 B）
+  • 档案互链：正文里出现「见 004」即可点击跳转
+  • 新增事件时间线页，按发现日期汇总全部记录
+  • 附件照片：部分档案附带现场照片，可点开灯箱
+  • 标签系统：模因 / 物理 / 认知危害，点标签聚合同类档案
+  • 高级筛选：威胁等级 + 发现年份 + 回收地点
+  • 详情页底部新增「相关档案」推荐与面包屑导航
+  • 搜索结果支持高亮与相关度排序
+  • 涂黑条：部分内容可点开，部分内容永久删除</description>
+  </item>
+  <item>
+    <title>v1.2.0 · 视觉改版：SCP 档案库 × 后室荧光走廊</title>
+    <link>https://lzy769.github.io/xilian/my-site/changelog.html#v1.2.0</link>
+    <guid isPermaLink="false">xilian-v1.2.0</guid>
+    <pubDate>Tue, 20 Oct 2026 01:00:00 GMT</pubDate>
+    <description>  • 配色由青色霓虹改为昏暗琥珀荧光，全站方角、1px 细线
+  • 新增顶部系统状态栏与扫描线覆盖层
+  • 面板化重排：统计 / 图鉴 / 分类 / 雷达 / 表单统一装订角
+  • 详情页改为临床文档版式，新增四格登记表与危险等级色
+  • 导航自动编号，正文改用衬线字体
+  • 新增 prefers-reduced-motion 适配，尊重系统减弱动效设置</description>
+  </item>
+  <item>
+    <title>v1.1.0 · 检索、无障碍与分享</title>
+    <link>https://lzy769.github.io/xilian/my-site/changelog.html#v1.1.0</link>
+    <guid isPermaLink="false">xilian-v1.1.0</guid>
+    <pubDate>Mon, 19 Oct 2026 01:00:00 GMT</pubDate>
+    <description>  • 档案室新增威胁等级筛选与编号排序
+  • 详情页支持 ←/→ 键盘翻页与上一条/下一条导航
+  • 联系表单改为前端校验 + 内联提示，不再弹窗
+  • 补全 13 个页面的 SEO meta、Open Graph 与 favicon
+  • 生成 sitemap.xml 与 robots.txt
+  • 修复缺失的 .hidden 规则（此前画廊筛选实际无效）
+  • 修复 view.html 中 3 处 &lt;&lt;p 标签拼写错误</description>
+  </item>
+  <item>
+    <title>v1.0.0 · 单数据源重构</title>
+    <link>https://lzy769.github.io/xilian/my-site/changelog.html#v1.0.0</link>
+    <guid isPermaLink="false">xilian-v1.0.0</guid>
+    <pubDate>Sun, 18 Oct 2026 01:00:00 GMT</pubDate>
+    <description>  • 11 条档案数据集中到 data/entries.js，页面不再各写一份
+  • 新增 data/render.js 渲染层，图鉴/详情/索引由数据生成
+  • 11 条档案补全七节正文（长相 / 身高 / 体重 / 性格 / 能力 / 智力 / 威胁等级）
+  • 新增 tools/check-site.js 静态自检与 tools/smoke-render.js 渲染冒烟测试
+  • 图片补 loading=lazy，背景音乐改为按需加载</description>
+  </item>
+  <item>
+    <title>v0.9.0 · 站点导入</title>
+    <link>https://lzy769.github.io/xilian/my-site/changelog.html#v0.9.0</link>
+    <guid isPermaLink="false">xilian-v0.9.0</guid>
+    <pubDate>Sat, 17 Oct 2026 01:00:00 GMT</pubDate>
+    <description>  • 迁入 11 件档案、图鉴总览、分类页与详情页
+  • 补全全部页面的 viewport 与 lang 属性
+  • 修正卡片名与详情页名不一致的问题</description>
+  </item>
+</channel>
+</rss>
