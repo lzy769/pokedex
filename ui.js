@@ -19,6 +19,17 @@
     setInterval(railTick, 1000);
   }
 
+  // 0.5 移动端常驻「回到档案库」：设计规范 §5.5 的"安全出口"。
+  //     桌面端由 CSS 隐藏（.courage-back 默认 display:none，≤768px 才出现），
+  //     所以在首页/档案室里它也只是多一个不可见的节点。
+  if (document.body) {
+    const courage = document.createElement("a");
+    courage.className = "courage-back";
+    courage.href = "works.html";
+    courage.textContent = "回到档案库";
+    document.body.appendChild(courage);
+  }
+
   // 1. 进度条填充
   const stats = document.querySelector(".stats");
   if (stats) {

@@ -95,12 +95,19 @@
       '<a href="view.html?id=' + e.id + '" class="dossier-card" data-entry-id="' + e.id + '">' +
         '<div class="dossier-header">' +
           '<span class="dossier-id">FILE: ' + esc(e.code) + "</span>" +
-          '<span class="dossier-status" data-status="' + esc(e.status) + '">[ ' + esc(e.status) + " ]</span>" +
         "</div>" +
         '<div class="dossier-img-wrap">' +
           imgTag(e.img, e.name, { desc: "点开看详情。" }) +
         "</div>" +
-        '<div class="dossier-footer">' + esc(e.name) + "</div>" +
+        /* 卡片层级（规范 §5.2）：编号 → 名称（衬线）→ 一句话摘要（次要色）→ 等级标记 */
+        '<div class="dossier-body">' +
+          '<h3 class="dossier-name">' + esc(e.name) + "</h3>" +
+          '<p class="dossier-lead">' + esc(e.lead) + "</p>" +
+        "</div>" +
+        '<div class="dossier-footer" data-status="' + esc(e.status) + '">' +
+          '<span class="dossier-dot" aria-hidden="true"></span>' +
+          '<span class="dossier-status">[ ' + esc(e.status) + " ]</span>" +
+        "</div>" +
       "</a>"
     );
   }

@@ -1,0 +1,53 @@
+name: 采集站点流量（自托管访问计数）
+
+# 同 checks.yml：发布到「只放网站」的公开仓库后，由 tools/publish-site.js
+# 放到那边的 .github/workflows/traffic.yml 执行；那边的仓库根 = 站点根。
+#
+# 为什么这样做：GitHub Pages 是纯静态托管，没有任何服务端，装不了统计服务。
+# 但仓库自己就有流量接口（push 权限即可读），所以「自托管计数」=
+# 由 Actions 定时把 GitHub 的聚合数字写回 data/traffic.js，页面读这个文件显示。
+# 不引第三方统计、不加埋点脚本、不采集访客标识。
+#
+# GitHub 的 traffic 接口只保留最近 14 天，所以数字是滚动窗口，不是历史累计。
+
+on:
+  schedule:
+    # 每天 UTC 03:17（北京时间 11:17）。避开整点，减少 Actions 排队。
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write # 需要提交回写后的 data/traffic.js
+
+concurrency:
+  group: traffic
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: 读取流量并回写
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 读取 views / clones 并更新 data/traffic.js
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/collect-traffic.js
+
+      - name: 有变化才提交
+        run: |
+          if git diff --quiet -- data/traffic.js; then
+            echo "流量数字没有变化，跳过提交。"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/traffic.js
+          git commit -m "chore(traffic): 更新站点访问计数"
+          git push
+          # 故意不加 [skip ci]：这次提交顺带让 GitHub 重新发布 Pages，
+          # 否则新数字只进了仓库、没有部署到线上。
+          # 本工作流只由 schedule / dispatch 触发，不会被自己的提交再次唤醒，不会成环。

@@ -1,0 +1,35 @@
+name: 站内自检
+
+# 这个文件不是给当前这个「开发仓库」用的，而是发布到「只放网站」的公开仓库后，
+# 由 tools/publish-site.js 放到那边的 .github/workflows/checks.yml 执行。
+#
+# 那边仓库的根目录就是站点根目录，所以下面所有路径都是站点根相对路径
+# （tools/check-site.js 而不是 my-site/tools/check-site.js）。
+#
+# 只做校验、不做部署：那边 Pages 用「从分支发布」模式，
+# push 到 main 之后 GitHub 自己会重新发布，所以这里不需要 deploy 步骤。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: 校验站点
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      # 检查不过就亮红叉。因为 Pages 是「从分支发布」，红叉不会自动拦住发布，
+      # 但它会在 push 之后几十秒内把问题指出来（缺数据、死链、脚本顺序错、CSS 括号不配平）。
+      - name: 站内自检（check-site）
+        run: node tools/check-site.js
+
+      - name: 渲染自检（smoke-render）
+        run: node tools/smoke-render.js

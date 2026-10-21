@@ -97,10 +97,14 @@ function writePng(file, w, h, rgba) {
  * ------------------------------------------------------------------------ */
 const hex2rgb = (s) => [parseInt(s.slice(1, 3), 16), parseInt(s.slice(3, 5), 16), parseInt(s.slice(5, 7), 16)];
 
+/* 图标配色跟 style.css 的 :root 走（设计规范 v1.0 §3）：
+   档案黑底 + 档案荧光青外框 + 收容红中心点。 */
+const THEME = "#0f1418";
+
 function drawIcon(size) {
-  const BG = hex2rgb("#0a0a08");
-  const AMBER = hex2rgb("#d9a13b");
-  const RED = hex2rgb("#b33227");
+  const BG = hex2rgb("#0f1418");
+  const AMBER = hex2rgb("#7fb3c7");
+  const RED = hex2rgb("#c0392b");
   const px = Buffer.alloc(size * size * 4);
 
   const set = (x, y, c, a) => {
@@ -122,7 +126,7 @@ function drawIcon(size) {
   // 极淡的扫描线，让它看起来像一块屏幕而不是一块色板
   const step = Math.max(4, Math.round(size / 48));
   for (let y = 0; y < size; y += step * 2) {
-    for (let x = 0; x < size; x++) set(x, y, [235, 225, 200], 0.035);
+    for (let x = 0; x < size; x++) set(x, y, [200, 211, 220], 0.035);
   }
 
   // 外框
@@ -178,8 +182,8 @@ const MANIFEST = {
   scope: "./",
   display: "standalone",
   orientation: "portrait-primary",
-  background_color: "#0a0a08",
-  theme_color: "#0a0a08",
+  background_color: THEME,
+  theme_color: THEME,
   categories: ["education", "entertainment"],
   icons: [
     { src: "icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
@@ -193,7 +197,7 @@ console.log("\n2. 页面接线");
 
 const HEAD_ADD =
   '<link rel="manifest" href="manifest.webmanifest">\n' +
-  '  <meta name="theme-color" content="#0a0a08">\n' +
+  '  <meta name="theme-color" content="' + THEME + '">\n' +
   '  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">\n';
 
 let touched = 0;
@@ -204,7 +208,19 @@ fs.readdirSync(ROOT)
   .sort()
   .forEach((file) => {
     let html = fs.readFileSync(p(file), "utf8");
-    if (html.includes('rel="manifest"')) { skipped++; return; }
+    const before = html;
+    /* 主题色统一成当前底色（幂等）：改了配色之后，老页面里残留的旧值必须一起换掉，
+       否则手机浏览器地址栏还是上一版的颜色。 */
+    html = html.replace(/(<meta name="theme-color" content=")[^"]*(")/g, "$1" + THEME + "$2");
+    if (html.includes('rel="manifest"')) {
+      if (html !== before) {
+        fs.writeFileSync(p(file), html, "utf8");
+        touched++;
+      } else {
+        skipped++;
+      }
+      return;
+    }
     if (!/<\/head>/.test(html)) { say(`[跳过] ${file} 没有 </head>`); return; }
     // 插在 </head> 之前，保持缩进一致
     html = html.replace(/\n?(\s*)<\/head>/, "\n  " + HEAD_ADD + "</head>");
