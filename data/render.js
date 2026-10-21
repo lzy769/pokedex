@@ -488,24 +488,35 @@
   var trafficEl = document.querySelector("[data-traffic]");
   if (trafficEl && window.TRAFFIC && typeof window.TRAFFIC === "object") {
     var t = window.TRAFFIC;
-    var row = function (label, val) {
-      return (
-        '<span class="tr-item"><b class="tr-num">' + esc(String(val == null ? "—" : val)) +
-        '</b><span class="tr-label">' + esc(label) + "</span></span>"
-      );
-    };
-    var html =
-      row("近 14 天访问", t.views) +
-      row("日均独立访客", t.uniquePerDay) +
-      row(
-        "单日最高" + (t.bestDay && t.bestDay.date ? " · " + String(t.bestDay.date).slice(5) : ""),
-        t.bestDay ? t.bestDay.count : null
-      ) +
-      row("仓库克隆", t.clones);
-    // updated 是 ISO 时间；只取到日期，避免暴露采集时刻
-    if (t.updated) html += '<span class="tr-updated">统计截至 ' + esc(String(t.updated).slice(0, 10)) + "</span>";
-    trafficEl.innerHTML = html;
-    trafficEl.hidden = false;
+    // 全 0 也当作「没有可展示的数据」：GitHub 的 traffic 接口只统计仓库页面，
+    // Pages 上的访问不计入，新仓库拿到的永远是 0 —— 显示 0 比不显示更误导。
+    var tally = [t.views, t.uniquePerDay, t.clones, t.bestDay && t.bestDay.count];
+    var hasAny = tally.some(function (v) {
+      return Number(v) > 0;
+    });
+    if (!hasAny) {
+      trafficEl.hidden = true;
+      trafficEl.innerHTML = "";
+    } else {
+      var row = function (label, val) {
+        return (
+          '<span class="tr-item"><b class="tr-num">' + esc(String(val == null ? "—" : val)) +
+          '</b><span class="tr-label">' + esc(label) + "</span></span>"
+        );
+      };
+      var html =
+        row("近 14 天访问", t.views) +
+        row("日均独立访客", t.uniquePerDay) +
+        row(
+          "单日最高" + (t.bestDay && t.bestDay.date ? " · " + String(t.bestDay.date).slice(5) : ""),
+          t.bestDay ? t.bestDay.count : null
+        ) +
+        row("仓库克隆", t.clones);
+      // updated 是 ISO 时间；只取到日期，避免暴露采集时刻
+      if (t.updated) html += '<span class="tr-updated">统计截至 ' + esc(String(t.updated).slice(0, 10)) + "</span>";
+      trafficEl.innerHTML = html;
+      trafficEl.hidden = false;
+    }
   }
 
   /* ---------- 8. 诡异实录：影像档案网格 ---------- */

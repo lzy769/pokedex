@@ -427,6 +427,19 @@ console.log("\n10. 访问计数块");
   check(!/null/.test(out), "缺失的字段显示为 —，没有 null 字面量");
   check(/—/.test(out), "缺失字段用了占位符 —");
 }
+{
+  // 全 0：GitHub 的 traffic 接口只统计仓库页面，Pages 上的访问不计入，
+  // 新仓库拿到的就是 0。这种情况同样必须隐藏，而不是显示一排 0。
+  const { bySelector } = loadRender({
+    bySelector: { "[data-traffic]": {} },
+    windowExtra: {
+      TRAFFIC: { updated: "2026-10-21T04:52:27.959Z", days: 14, views: 0, uniquePerDay: 0, bestDay: { date: "2026-10-08", count: 0 }, clones: 0 },
+    },
+  });
+  const el = bySelector["[data-traffic]"];
+  check(el.hidden === true, "全 0 时保持 hidden（不显示一排 0）");
+  check(!el.innerHTML, "全 0 时不写入任何内容");
+}
 
 /* ---------- 11. 诡异实录：影像卡片 ---------- */
 console.log("11. 诡异实录（影像卡片）");
