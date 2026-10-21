@@ -13,6 +13,9 @@
  *   og:image 全部冲掉，而且不会有任何报错。顺序写死在这里，就不会再错。
  *
  * 正确顺序与理由：
+ *   0. normalize-eol.js 把文本文件行尾刷成 LF
+ *                       —— 必须最先跑：缓存版本是按文件内容算的哈希，
+ *                          带着 CRLF 算出来的版本在 CI（Linux 检出成 LF）上对不上
  *   1. build-feed.js    重写 changelog.html + feed.xml（会覆盖 head）
  *   2. build-seo.js     SEO/OG/canonical + sitemap.xml + robots.txt
  *                       —— 必须紧跟在 build-feed 后面，把上一步冲掉的补回来
@@ -32,6 +35,7 @@ const CHECK_ONLY = args.includes("--check");
 const QUICK = args.includes("--quick");
 
 const STEPS = [
+  { name: "统一行尾为 LF", file: "normalize-eol.js", skipWhenCheckOnly: true },
   { name: "更新日志 + RSS", file: "build-feed.js", skipWhenCheckOnly: true },
   { name: "SEO / sitemap / robots", file: "build-seo.js", skipWhenCheckOnly: true },
   { name: "图片 WebP + srcset 接线", file: "build-imgtags.js", skipWhenCheckOnly: true },

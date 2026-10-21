@@ -1,0 +1,28 @@
+# 行尾策略：站内文本文件一律 LF，任何机器上检出都是 LF。
+#
+# 为什么这件事对本站特别重要：sw.js 的缓存版本是按「文件名 + 字节数 +
+# 内容 sha256」算出来的哈希，用于判断预缓存清单有没有变。如果本地工作副本是
+# CRLF、而 CI（Linux）检出成 LF，同一个文件会算出两个不同的哈希，
+# check-site.js 就会误报「sw.js 缓存版本过期」，把发布卡住 —— 而文件其实一模一样。
+# tools/normalize-eol.js 负责把工作副本也刷成 LF，两边配合才稳定。
+
+* text=auto eol=lf
+
+# 二进制资源：一个字节都不许动
+*.webp  binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.mp3   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+
+# 生成物：在 GitHub 上按「生成文件」处理，折叠 diff
+sw.js              linguist-generated
+data/img-info.js   linguist-generated
+sitemap.xml        linguist-generated
+feed.xml           linguist-generated
+changelog.html     linguist-generated
