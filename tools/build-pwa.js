@@ -161,9 +161,10 @@ console.log("1. 生成图标");
  * ------------------------------------------------------------------------ */
 const ASSETS = listAssets();
 
-console.log("\n2. 计算缓存版本");
-const VERSION = computeVersion(ASSETS);
-say(`${ASSETS.length} 个文件 → 版本 ${VERSION}`);
+/* 注意：缓存版本 VERSION 故意不在这儿算 —— 它必须等下面「页面接线」和 manifest
+   都写完再算（见第 4 步）。理由：这两步都会改 HTML / manifest 的内容，而它们都在
+   预缓存清单内；先算版本的话，算完立刻就被自己写脏，check-site.js 下一次就会判
+   sw.js「缓存版本过期」。 */
 
 /* ---------------------------------------------------------------------------
  * 4. manifest
@@ -187,11 +188,43 @@ const MANIFEST = {
   ],
 };
 
+/* ------- 2. 页面接线：给还没引 manifest 的页面补 head 标签（幂等） ------- */
+console.log("\n2. 页面接线");
+
+const HEAD_ADD =
+  '<link rel="manifest" href="manifest.webmanifest">\n' +
+  '  <meta name="theme-color" content="#0a0a08">\n' +
+  '  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">\n';
+
+let touched = 0;
+let skipped = 0;
+
+fs.readdirSync(ROOT)
+  .filter((f) => f.endsWith(".html"))
+  .sort()
+  .forEach((file) => {
+    let html = fs.readFileSync(p(file), "utf8");
+    if (html.includes('rel="manifest"')) { skipped++; return; }
+    if (!/<\/head>/.test(html)) { say(`[跳过] ${file} 没有 </head>`); return; }
+    // 插在 </head> 之前，保持缩进一致
+    html = html.replace(/\n?(\s*)<\/head>/, "\n  " + HEAD_ADD + "</head>");
+    fs.writeFileSync(p(file), html, "utf8");
+    touched++;
+  });
+
+say(`写入 ${touched} 个页面，跳过 ${skipped} 个（已接线）`);
+
+/* ------- 3. manifest ------- */
 const manifestChanged = writeIfChanged(p("manifest.webmanifest"), JSON.stringify(MANIFEST, null, 2) + "\n");
 console.log("\n3. manifest.webmanifest");
 say(`name = ${MANIFEST.name}`);
 say(`icons = ${MANIFEST.icons.length} 条（含 1 条 maskable）`);
 say(manifestChanged ? "已更新" : "无变化");
+
+/* ------- 4. 计算缓存版本（必须在上面两步写完之后） ------- */
+const VERSION = computeVersion(ASSETS);
+console.log("\n4. 计算缓存版本");
+say(`${ASSETS.length} 个文件 → 版本 ${VERSION}`);
 
 /* ---------------------------------------------------------------------------
  * 5. Service Worker
@@ -263,38 +296,10 @@ self.addEventListener("fetch", (event) => {
 `;
 
 const swChanged = writeIfChanged(p("sw.js"), SW);
-console.log("\n4. sw.js");
+console.log("\n5. sw.js");
 say(`缓存名 ${"pokedex-" + VERSION}`);
 say(`预缓存 ${ASSETS.length} 个文件（不含 bgm.mp3，音频走运行时缓存）`);
 say(swChanged ? "已更新" : "无变化");
-
-/* ---------------------------------------------------------------------------
- * 6. 给每个 HTML 补 manifest / theme-color（幂等）
- * ------------------------------------------------------------------------ */
-console.log("\n5. 页面接线");
-
-const HEAD_ADD =
-  '<link rel="manifest" href="manifest.webmanifest">\n' +
-  '  <meta name="theme-color" content="#0a0a08">\n' +
-  '  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">\n';
-
-let touched = 0;
-let skipped = 0;
-
-fs.readdirSync(ROOT)
-  .filter((f) => f.endsWith(".html"))
-  .sort()
-  .forEach((file) => {
-    let html = fs.readFileSync(p(file), "utf8");
-    if (html.includes('rel="manifest"')) { skipped++; return; }
-    if (!/<\/head>/.test(html)) { say(`[跳过] ${file} 没有 </head>`); return; }
-    // 插在 </head> 之前，保持缩进一致
-    html = html.replace(/\n?(\s*)<\/head>/, "\n  " + HEAD_ADD + "</head>");
-    fs.writeFileSync(p(file), html, "utf8");
-    touched++;
-  });
-
-say(`写入 ${touched} 个页面，跳过 ${skipped} 个（已接线）`);
 
 /* ---------------------------------------------------------------------------
  * 汇总

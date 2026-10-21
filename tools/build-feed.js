@@ -19,7 +19,8 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const SITE = "Old Pokémon Pokédex";
 const SITE_CN = "老可梦图鉴";
-const LINK_BASE = "https://lzy769.github.io/xilian/my-site/";
+// 线上站点根地址（末尾必须带 /）：换域名/换仓库名只改这一行。
+const LINK_BASE = "https://lzy769.github.io/pokedex/";
 
 /** 版本从新到旧；date 用 YYYY-MM-DD。 */
 const RELEASES = [
@@ -195,9 +196,10 @@ ${list}
     </div>
   </footer>
 
+  <!-- ui.js 的全站搜索要读 window.POKEDEX（在 data/entries.js 里定义）。
+       少了它，本页搜索框能弹出、但永远搜不到档案 —— check-site.js 会把这种情况拦下来。 -->
+  <script src="data/entries.js"></script>
   <script src="ui.js"></script>
-  <script>
-    const menuToggle = document.getElementById("menuToggle");
     const mainNav = document.getElementById("mainNav");
     if (menuToggle && mainNav) {
       menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
@@ -215,7 +217,7 @@ ${list}
 function buildFeed() {
   const items = RELEASES.map((r) => {
     const body = r.items.map((t) => "  • " + t).join("\n");
-    const guid = "xilian-v" + r.ver;
+    const guid = "pokedex-v" + r.ver;
     return [
       "  <item>",
       "    <title>" + esc("v" + r.ver + " · " + r.title) + "</title>",

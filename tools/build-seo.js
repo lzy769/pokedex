@@ -5,13 +5,17 @@
  *     node tools/build-seo.js
  *
  * 作用：
- *   1. 给 13 个 HTML 的 <head> 补 meta description / Open Graph / twitter card
- *   2. 插入 favicon 引用
+ *   1. 给 16 个 HTML 的 <head> 补 meta description / Open Graph / twitter card
+ *   2. 插入 favicon 引用 / canonical / og:url
  *   3. 生成 sitemap.xml（含 11 条档案详情页）
  *   4. 生成 robots.txt
  *
  * 说明：本脚本是可重复执行的（幂等）——已经写过 description 的页面不会重复插入。
- *      OG 图片用的是相对路径，本地预览够用；真正上线时把 og:image 换成绝对 URL。
+ *
+ * 关于绝对地址：站点已上线到 https://lzy769.github.io/pokedex/ ，
+ * 所以 og:image / og:url / canonical / sitemap 的 <loc> / robots 的 Sitemap 行
+ * 都必须写绝对 URL —— 相对路径在分享卡片和搜索引擎抓取里会被解析错。
+ * 站点换域名或换仓库名时，只改下面的 SITE_BASE 一处，再重跑本脚本。
  * ========================================================================== */
 "use strict";
 
@@ -32,6 +36,10 @@ const cats = P.categories;
 /* ---------- 各页面的描述与关键词 ---------- */
 const SITE = "Old Pokémon Pokédex";
 const SITE_DESC = "一份收录怪异个体影像的私人档案室，按分类浏览档案、检索编号。";
+// 线上站点根地址（末尾必须带 /）。换域名/换仓库名只改这一行。
+const SITE_BASE = "https://lzy769.github.io/pokedex/";
+// 分享卡片图：专门为 OG 生成的 1200×630
+const OG_IMAGE = SITE_BASE + "og-cover.png";
 
 const META = {
   "index.html": {
@@ -83,6 +91,16 @@ const META = {
     desc: `人类希望档案室（向死而生），收录档案 ${entries.filter((e) => e.cat === "hope").map((e) => e.code).join("、")}。`,
     kw: "人类希望,向死而生,档案室",
   },
+  "timeline.html": {
+    title: "事件时间线 · Old Pokémon Pokédex",
+    desc: "按发现日期汇总全部档案与观测事件的时间线，最早的记录最不可靠。",
+    kw: "事件时间线,时间线,发现日期,档案年表",
+  },
+  "changelog.html": {
+    title: "更新日志 · Old Pokémon Pokédex",
+    desc: "站点与档案库的版本记录：每次新增了什么档案、什么功能。",
+    kw: "更新日志,changelog,RSS,版本记录",
+  },
 };
 
 /* ---------- HTML 转义（属性值里不能出现裸引号） ---------- */
@@ -94,30 +112,88 @@ const HTML_FILES = fs
   .filter((f) => f.endsWith(".html"))
   .sort();
 
-const metaTag = (m) =>
+const metaTag = (m, file) =>
   `  <meta name="description" content="${esc(m.desc)}">\n` +
   `  <meta name="keywords" content="${esc(m.kw)}">\n` +
+  `  <link rel="canonical" href="${SITE_BASE + file}">\n` +
   `  <meta property="og:type" content="website">\n` +
+  `  <meta property="og:site_name" content="${esc(SITE)}">\n` +
+  `  <meta property="og:url" content="${SITE_BASE + file}">\n` +
   `  <meta property="og:title" content="${esc(m.title)}">\n` +
   `  <meta property="og:description" content="${esc(m.desc)}">\n` +
-  `  <meta property="og:image" content="hero.jpg">\n` +
+  `  <meta property="og:image" content="${OG_IMAGE}">\n` +
+  `  <meta property="og:image:width" content="1200">\n` +
+  `  <meta property="og:image:height" content="630">\n` +
   `  <meta name="twitter:card" content="summary_large_image">\n` +
   `  <meta name="twitter:title" content="${esc(m.title)}">\n` +
-  `  <meta name="twitter:description" content="${esc(m.desc)}">`;
+  `  <meta name="twitter:description" content="${esc(m.desc)}">\n` +
+  `  <meta name="twitter:image" content="${OG_IMAGE}">`;
 
 let patched = 0;
+// 兜底页不该被搜索引擎收录：它是给「不存在的地址」用的，
+// 不写 noindex 的话搜索引擎会把任意 404 都当成这个页面的副本。
+const NOINDEX = `<meta name="robots" content="noindex,follow">`;
 HTML_FILES.forEach((file) => {
-  const m = META[file];
-  if (!m) return;
   let html = read(file);
   const before = html;
+
+  // 不在 META 里的页面（目前只有 404.html）只做 noindex，不写标题/描述
+  const m = META[file];
+  if (!m) {
+    if (file === "404.html" && !/name="robots"/.test(html)) {
+      const anchor = '<link rel="stylesheet" href="style.css">';
+      if (html.includes(anchor)) html = html.replace(anchor, NOINDEX + '\n  ' + anchor);
+    }
+    if (html !== before) {
+      write(file, html);
+      patched++;
+    }
+    return;
+  }
 
   // 已经写过 description 就跳过，避免重复
   if (!/name="description"/.test(html)) {
     const idx = html.indexOf("</title>");
     if (idx < 0) { console.log("  [warn] " + file + " 没有 <title>，跳过 meta"); return; }
     const end = html.indexOf("\n", idx);
-    html = html.slice(0, end + 1) + "\n" + metaTag(m) + html.slice(end + 1);
+    html = html.slice(0, end + 1) + "\n" + metaTag(m, file) + html.slice(end + 1);
+  }
+
+  // ---- 升级既有页面（早期版本写的是相对 og:image，也没有 canonical / og:url）----
+  // og:image 一律换成绝对地址的 1200×630 分享图
+  html = html.replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${OG_IMAGE}">`);
+  html = html.replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${OG_IMAGE}">`);
+
+  // og:image:width / height 缺失就补在 og:image 后面
+  if (!/property="og:image:width"/.test(html)) {
+    html = html.replace(
+      /(<meta property="og:image" content="[^"]*">)/,
+      '$1\n  <meta property="og:image:width" content="1200">\n  <meta property="og:image:height" content="630">'
+    );
+  }
+
+  // twitter:image 缺失就插在 twitter:description 后面
+  if (!/name="twitter:image"/.test(html)) {
+    html = html.replace(
+      /(<meta name="twitter:description" content="[^"]*">)/,
+      '$1\n  <meta name="twitter:image" content="' + OG_IMAGE + '">'
+    );
+  }
+
+  // og:site_name / og:url 缺失就补在 og:type 后面
+  if (!/property="og:site_name"/.test(html)) {
+    html = html.replace(
+      /(<meta property="og:type" content="website">)/,
+      '$1\n  <meta property="og:site_name" content="' + esc(SITE) + '">\n  <meta property="og:url" content="' + SITE_BASE + file + '">'
+    );
+  }
+
+  // canonical 缺失就插在 style.css 之前
+  if (!/rel="canonical"/.test(html)) {
+    const anchor = '<link rel="stylesheet" href="style.css">';
+    if (html.includes(anchor)) {
+      html = html.replace(anchor, '<link rel="canonical" href="' + SITE_BASE + file + '">\n  ' + anchor);
+    }
   }
 
   // favicon（幂等）
@@ -159,7 +235,7 @@ const entries_xml = entries
     const cat = P.category(e.cat);
     return (
       "  <url>\n" +
-      "    <loc>view.html?id=" + e.id + "</loc>\n" +
+      "    <loc>" + SITE_BASE + "view.html?id=" + e.id + "</loc>\n" +
       "    <lastmod>" + today + "</lastmod>\n" +
       "    <changefreq>monthly</changefreq>\n" +
       "    <priority>0.8</priority>\n" +
@@ -170,7 +246,7 @@ const entries_xml = entries
   .join("\n");
 
 const pages_xml = pages
-  .map((p) => "  <url>\n    <loc>" + p + "</loc>\n    <lastmod>" + today + "</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>" + (p === "index.html" ? "1.0" : "0.7") + "</priority>\n  </url>")
+  .map((p) => "  <url>\n    <loc>" + SITE_BASE + p + "</loc>\n    <lastmod>" + today + "</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>" + (p === "index.html" ? "1.0" : "0.7") + "</priority>\n  </url>")
   .join("\n");
 
 write(
@@ -185,10 +261,11 @@ console.log(`[ok] sitemap.xml：${pages.length} 个页面 + ${entries.length} �
 write(
   "robots.txt",
   `# 老可梦图鉴 robots.txt\n` +
-  `# 上线后把下面的 Sitemap 改成你的域名，例如 https://你的域名/sitemap.xml\n` +
+  `# Sitemap 必须是绝对地址：站点在 https://lzy769.github.io/pokedex/ ，\n` +
+  `# 写成 /sitemap.xml 会被解析到域名根目录（lzy769.github.io/sitemap.xml），抓不到。\n` +
   `User-agent: *\n` +
   `Allow: /\n` +
   `\n` +
-  `Sitemap: /sitemap.xml\n`
+  `Sitemap: ` + SITE_BASE + `sitemap.xml\n`
 );
 console.log("[ok] robots.txt");

@@ -1,6 +1,7 @@
 # 老可梦图鉴 robots.txt
-# 上线后把下面的 Sitemap 改成你的域名，例如 https://你的域名/sitemap.xml
+# Sitemap 必须是绝对地址：站点在 https://lzy769.github.io/pokedex/ ，
+# 写成 /sitemap.xml 会被解析到域名根目录（lzy769.github.io/sitemap.xml），抓不到。
 User-agent: *
 Allow: /
 
-Sitemap: /sitemap.xml
+Sitemap: https://lzy769.github.io/pokedex/sitemap.xml
