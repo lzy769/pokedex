@@ -1,6 +1,6 @@
 /* 本文件由 tools/build-pwa.js 生成，不要手改 —— 改完再跑一次脚本即可。
  * 缓存版本是预缓存清单的 sha256 前 10 位，所以内容一变版本就变。 */
-const CACHE = "pokedex-a5b0c81b00";
+const CACHE = "pokedex-cbc395fd40";
 const OFFLINE_URL = "404.html";
 const PRECACHE = [
   "1-800.webp",
@@ -35,6 +35,7 @@ const PRECACHE = [
   "changelog.html",
   "data/entries.js",
   "data/img-info.js",
+  "data/recordings.js",
   "data/render.js",
   "data/traffic.js",
   "favicon.svg",
@@ -56,6 +57,7 @@ const PRECACHE = [
   "intro.js",
   "manifest.webmanifest",
   "og-cover.png",
+  "records.html",
   "robots.txt",
   "sitemap.html",
   "sitemap.xml",
@@ -119,6 +121,11 @@ self.addEventListener("fetch", (event) => {
     );
     return;
   }
+
+  // 视频直接放行，不进 Service Worker：<video> 会发 Range 请求，缓存整段会让
+  // 拖进度条变成"重下一遍"；而且四段录像合计 18 MB，不值得塞进缓存。
+  // 注意 bgm.mp3 不在此列 —— 它是缓存优先，第二次进站就不必再下 5 MB。
+  if (/.(mp4|webm|ogv|m4v)$/i.test(url.pathname)) return;
 
   // 其余静态资源：缓存优先，未命中再联网并顺手存下来
   event.respondWith(

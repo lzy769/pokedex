@@ -338,7 +338,12 @@ if (PWA) {
 
     if (!/mode === "navigate"/.test(sw)) warn("sw.js 没有区分页面导航请求，可能给用户返回缓存的旧页面");
     if (!/skipWaiting/.test(sw) || !/clients\.claim/.test(sw)) warn("sw.js 没做 skipWaiting + clients.claim，更新要等下次访问才生效");
-    if (/bgm\.mp3/.test(sw)) warn("sw.js 预缓存里带着 bgm.mp3，首次安装会多下 5 MB");
+    // 只检查 PRECACHE 数组本身：sw.js 的注释里也会提到 bgm.mp3（解释为什么排除它），
+    // 全文件搜会误报。
+    const precacheSrc = (sw.match(/const PRECACHE = (\[[\s\S]*?\]);/) || [])[1] || "";
+    if (/bgm\.mp3/.test(precacheSrc)) warn("sw.js 预缓存里带着 bgm.mp3，首次安装会多下 5 MB");
+    if (/\.mp4/.test(precacheSrc)) warn("sw.js 预缓存里带着 mp4，视频不该进预缓存");
+    if (!precacheSrc) warn("没能在 sw.js 里定位到 PRECACHE 数组");
 
     // 预缓存清单要和 pwa-lib 一致：漏掉新页面就等于离线时打不开
     const listed = (sw.match(/"([^"]+\.(?:html|css|js|png|svg|webp|webmanifest|xml|txt))"/g) || [])
@@ -429,6 +434,111 @@ group("2.8 大小写安全（GitHub Pages 跑在 Linux 上）");
   if (caseOnly.length) {
     fail("大小写不一致（本机通过、上线 404）：" + caseOnly.map((r) => `${r.from} → ${r.to}`).join(" / "));
   } else pass("全部引用的大小写与磁盘文件名完全一致");
+}
+
+/* ---------- 2.9 诡异实录（影像档案） ---------- */
+group("2.9 诡异实录（影像档案）");
+
+let RECS = null;
+try {
+  require(path.join(ROOT, "data/recordings.js"));
+  RECS = global.window.RECORDINGS || null;
+} catch (e) {
+  fail("加载 data/recordings.js 失败：" + e.message);
+}
+
+if (!Array.isArray(RECS)) {
+  fail("data/recordings.js 没有挂上 window.RECORDINGS");
+} else {
+  pass(`影像档案 ${RECS.length} 条`);
+
+  const ids = RECS.map((r) => r.id);
+  if (new Set(ids).size !== ids.length) fail("id 有重复：" + ids.join(","));
+  else if (ids.some((id, i) => id !== i + 1)) fail("id 不是从 1 起的连续整数：" + ids.join(","));
+  else pass("id 连续：" + ids.join(","));
+
+  const badCode = RECS.filter((r, i) => r.code !== "REC-" + String(i + 1).padStart(3, "0"));
+  if (badCode.length) fail("登记号不合规：" + badCode.map((r) => r.code).join(","));
+  else pass("登记号 REC-001 起连续");
+
+  const badDur = RECS.filter(
+    (r) =>
+      !(typeof r.duration === "number" && r.duration > 0) ||
+      r.durationText !== "00:" + r.duration.toFixed(1)
+  );
+  if (badDur.length) fail("时长与时间码不一致：" + badDur.map((r) => r.code).join(","));
+  else pass("时长与时间码一致（mm:ss.s）");
+
+  const badDim = RECS.filter((r) => !(r.w > 0 && r.h > 0 && r.thumbW > 0 && r.thumbH > 0));
+  if (badDim.length) fail("缺少像素尺寸：" + badDim.map((r) => r.code).join(","));
+  else pass("每段都有宽高（用于防止加载跳版）");
+
+  // 资源存在 + 大小写完全一致 + 非空
+  const missingRes = [];
+  const emptyRes = [];
+  const tooBig = [];
+  RECS.forEach((r) => {
+    [r.src, r.poster, r.thumb].forEach((rel) => {
+      if (!existsExact(rel)) missingRes.push(r.code + " → " + rel);
+      else {
+        const st = fs.statSync(path.join(ROOT, rel));
+        if (st.size === 0) emptyRes.push(rel);
+        if (rel === r.src && st.size > 95 * 1024 * 1024) tooBig.push(rel);
+      }
+    });
+  });
+  if (missingRes.length) fail("引用的资源不存在或大小写不符：" + missingRes.join(" / "));
+  else pass(`全部 ${RECS.length * 3} 个资源（mp4 / poster / thumb）都在，且大小写一致`);
+  if (emptyRes.length) fail("资源为 0 字节：" + emptyRes.join(" / "));
+  if (tooBig.length) fail("视频超过 GitHub 单文件 100 MB 限制：" + tooBig.join(" / "));
+
+  const badExt = RECS.filter(
+    (r) => !/\.mp4$/i.test(r.src) || !/\.webp$/i.test(r.poster) || !/\.webp$/i.test(r.thumb)
+  );
+  if (badExt.length) fail("扩展名不对（应为 .mp4 / .webp）：" + badExt.map((r) => r.code).join(","));
+  else pass("扩展名：mp4 + webp 封面 + webp 缩略图");
+
+  const badStatus = RECS.filter((r) => !["PENDING", "VERIFIED", "SEALED"].includes(r.status));
+  if (badStatus.length) fail("status 不在约定取值内：" + badStatus.map((r) => r.status).join(","));
+  else pass("status 取值合法");
+}
+
+// 页面接线
+if (!exists("records.html")) {
+  fail("缺少 records.html");
+} else {
+  const rp = read("records.html");
+  if (!/data-record-grid/.test(rp)) fail("records.html 缺少 [data-record-grid]");
+  else pass("records.html 有影像网格容器");
+  const order = ["data/entries.js", "data/img-info.js", "data/recordings.js", "data/render.js", "ui.js"];
+  let last = -1;
+  let bad = false;
+  order.forEach((s) => {
+    const at = rp.indexOf('src="' + s + '"');
+    if (at < 0 || at < last) bad = true;
+    last = at;
+  });
+  if (bad) fail("records.html 的脚本顺序不对，应为：" + order.join(" → "));
+  else pass("records.html 脚本顺序正确");
+}
+
+if (exists("index.html")) {
+  const ip = read("index.html");
+  if (!/data-record-grid/.test(ip)) fail("index.html 缺少诡异实录分区 [data-record-grid]");
+  else pass("首页有诡异实录分区");
+  if (!ip.includes('src="data/recordings.js"')) fail("index.html 没引 data/recordings.js");
+  else pass("首页引了 data/recordings.js");
+}
+
+if (exists("ui.js") && !/video-lightbox/.test(read("ui.js"))) fail("ui.js 缺少视频灯箱");
+else pass("ui.js 有视频灯箱");
+if (exists("style.css")) {
+  const css = read("style.css");
+  const need = [".record-card", ".record-thumb", ".video-lightbox", ".video-el",
+                ".rec-dur", ".record-note", ".record-meta"];
+  const lack = need.filter((c) => !css.includes(c));
+  if (lack.length) fail("style.css 缺少样式：" + lack.join(", "));
+  else pass("影像卡片与视频灯箱样式齐全（" + need.length + " 项）");
 }
 
 /* ---------- 3. 残留硬编码 ---------- */

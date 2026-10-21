@@ -11,6 +11,7 @@
  *   [data-tag-index]                              标签云（sitemap.html）
  *   [data-tag-results]                            图鉴页：?tag=xxx 时的聚合结果
  *   [data-timeline]                               时间线页：全部事件按日期排列
+ *   [data-record-grid]                            诡异实录：影像档案卡片网格
  *   #monsterName / #monsterImg / ...              详情页：由 ?id= 决定内容
  *
  * 引入顺序必须是：entries.js → render.js → ui.js
@@ -505,5 +506,50 @@
     if (t.updated) html += '<span class="tr-updated">统计截至 ' + esc(String(t.updated).slice(0, 10)) + "</span>";
     trafficEl.innerHTML = html;
     trafficEl.hidden = false;
+  }
+
+  /* ---------- 8. 诡异实录：影像档案网格 ---------- */
+  // 数据来自 data/recordings.js；点击播放由 ui.js 第 20 节的视频灯箱接管
+  // （用事件委托，所以卡片后渲染也能点）。
+  // 缩略图不写 srcset：每张只有 6–15 KB，再派生一套 -800 图并不划算。
+  var recGrid = document.querySelector("[data-record-grid]");
+  if (recGrid) {
+    var recs = (window.RECORDS && window.RECORDS.list()) || [];
+    if (!recs.length) {
+      recGrid.insertAdjacentHTML("beforeend", '<p class="grid-empty">影像档案尚未登记。</p>');
+    } else {
+      recGrid.insertAdjacentHTML(
+        "beforeend",
+        recs
+          .map(function (r) {
+            var label = esc(r.code + " " + r.title);
+            return (
+              '<article class="record-card" data-record-id="' + r.id + '">' +
+                '<button type="button" class="record-thumb" data-record-open="' + r.id + '"' +
+                  ' aria-label="播放 ' + label + '">' +
+                  '<img loading="lazy" decoding="async" src="' + esc(r.thumb) + '"' +
+                    ' width="' + r.thumbW + '" height="' + r.thumbH + '" alt="' + label + '">' +
+                  '<span class="rec-play" aria-hidden="true"></span>' +
+                  '<span class="rec-dur">' + esc(r.durationText) + "</span>" +
+                  '<span class="rec-ratio">' + esc(r.ratio) + "</span>" +
+                "</button>" +
+                '<div class="record-body">' +
+                  '<div class="record-head">' +
+                    '<span class="record-code">' + esc(r.code) + "</span>" +
+                    '<span class="record-status" data-status="' + esc(r.status) + '">[ ' + esc(r.status) + " ]</span>" +
+                  "</div>" +
+                  '<h3 class="record-title">' + esc(r.title) + "</h3>" +
+                  '<p class="record-note">' + esc(r.note) + "</p>" +
+                  '<div class="record-meta">' +
+                    "<span>" + esc(r.w + "×" + r.h) + "</span>" +
+                    "<span>" + esc(r.durationText) + "</span>" +
+                  "</div>" +
+                "</div>" +
+              "</article>"
+            );
+          })
+          .join("")
+      );
+    }
   }
 })();

@@ -224,6 +224,7 @@
     { title: "系统索引", sub: "全站链接", url: "sitemap.html", kw: "索引 站点地图" },
     { title: "事件时间线", sub: "按发现日期排列", url: "timeline.html", kw: "时间线 年表 历史 事件" },
     { title: "更新日志", sub: "版本记录与订阅", url: "changelog.html", kw: "更新 日志 版本 订阅 rss" },
+    { title: "诡异实录", sub: "四段未核实的影像", url: "records.html", kw: "录像 视频 影像 实录 rec 影片 记录" },
   ];
 
   // 档案条目：由唯一数据源生成；若某页漏引 data/entries.js，就退化成只能搜页面
@@ -1048,6 +1049,86 @@
   if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+
+  // 20. 视频灯箱：诡异实录的播放器
+  //     卡片是 data/render.js 画的，所以用事件委托绑定，晚渲染出来也能点。
+  //     关闭时把 src 摘掉再 load()：只 pause() 的话 <video> 会继续占着网络连接，
+  //     而且下次打开同一段还得重新缓冲。
+  if (window.RECORDS) {
+    const vbox = document.createElement("div");
+    vbox.className = "video-lightbox";
+    vbox.setAttribute("role", "dialog");
+    vbox.setAttribute("aria-modal", "true");
+    vbox.setAttribute("aria-hidden", "true");
+    vbox.innerHTML =
+      '<button type="button" class="video-close" aria-label="关闭">✕</button>' +
+      '<div class="video-stage">' +
+        '<video class="video-el" controls playsinline preload="metadata"></video>' +
+        '<div class="video-caption">' +
+          '<div class="vc-head"><span class="vc-code"></span><span class="vc-status"></span></div>' +
+          '<h3 class="vc-title"></h3>' +
+          '<p class="vc-note"></p>' +
+          '<div class="vc-meta"></div>' +
+        "</div>" +
+      "</div>";
+    document.body.appendChild(vbox);
+
+    const vEl = vbox.querySelector(".video-el");
+    const vCode = vbox.querySelector(".vc-code");
+    const vStatus = vbox.querySelector(".vc-status");
+    const vTitle = vbox.querySelector(".vc-title");
+    const vNote = vbox.querySelector(".vc-note");
+    const vMeta = vbox.querySelector(".vc-meta");
+
+    const openRecord = (id) => {
+      const r = window.RECORDS.find(id);
+      if (!r) return;
+      vEl.src = r.src;
+      vEl.poster = r.poster;
+      vCode.textContent = r.code;
+      vStatus.textContent = "[ " + r.status + " ]";
+      vStatus.setAttribute("data-status", r.status);
+      vTitle.textContent = r.title;
+      vNote.textContent = r.note;
+      vMeta.textContent = "";
+      [r.w + "×" + r.h, r.durationText, r.ratio].forEach((txt) => {
+        const s = document.createElement("span");
+        s.textContent = txt;
+        vMeta.appendChild(s);
+      });
+      vbox.classList.add("show");
+      vbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      // 在用户手势里调 play()，一般不会被拦；真被拦了也不弹提示，控件还在。
+      const pr = vEl.play();
+      if (pr && pr.catch) pr.catch(() => {});
+      playSound("click");
+    };
+
+    const closeRecord = () => {
+      vEl.pause();
+      vEl.removeAttribute("src");
+      vEl.load();
+      vbox.classList.remove("show");
+      vbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-record-open]");
+      if (!btn) return;
+      e.preventDefault();
+      openRecord(btn.getAttribute("data-record-open"));
+    });
+
+    vbox.querySelector(".video-close").addEventListener("click", closeRecord);
+    vbox.addEventListener("click", (e) => {
+      if (e.target === vbox) closeRecord();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && vbox.classList.contains("show")) closeRecord();
     });
   }
 })();

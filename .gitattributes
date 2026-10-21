@@ -16,6 +16,9 @@
 *.gif   binary
 *.ico   binary
 *.mp3   binary
+*.mp4   binary
+*.webm  binary
+*.ogv   binary
 *.woff  binary
 *.woff2 binary
 *.ttf   binary

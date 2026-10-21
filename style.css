@@ -549,6 +549,7 @@ mark.hl {
 .gallery,
 .cards,
 .radar-section,
+.records,
 .contact-form {
   position: relative;
   width: min(var(--maxw), calc(100% - 2 * var(--pad)));
@@ -564,6 +565,7 @@ mark.hl {
 .gallery::before,
 .cards::before,
 .radar-section::before,
+.records::before,
 .contact-form::before {
   content: "";
   position: absolute;
@@ -2782,6 +2784,300 @@ html.calm body::before { opacity: 0.4; }
   .decrypt-panel { padding: 20px 18px; }
   .alarm-box { padding: 22px 20px; }
   .alarm-box h2 { font-size: 18px; }
+}
+
+/* ============================================================
+ * 24. 诡异实录（影像档案）
+ * ============================================================
+ * 四段录像的画幅不一致（1280×720 / 720×1280 / 720×1040 / 720×960），
+ * 这里故意**不**统一裁成 16:9 —— 画幅本身就是这批素材最真实的信息之一，
+ * 裁掉就看不出来了。缩略图按原比例排，用 auto-fill 的等宽列，竖幅自然更高。
+ */
+.records { position: relative; }
+
+/* 分区标题里的"展开全部"链接 */
+.section-more {
+  margin-left: 8px;
+  white-space: nowrap;
+  color: var(--amber);
+  border-bottom: 1px solid var(--amber-dim);
+}
+
+.section-more:hover,
+.section-more:focus-visible {
+  color: var(--amber-bright);
+  border-bottom-color: var(--amber);
+}
+
+.record-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: clamp(14px, 1.6vw, 22px);
+  margin-top: clamp(20px, 2.4vw, 30px);
+  align-items: start;
+}
+
+.record-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 10, 8, 0.55);
+  border: 1px solid var(--line-soft);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.record-card:hover,
+.record-card:focus-within {
+  border-color: var(--amber-dim);
+  background: rgba(18, 17, 12, 0.7);
+}
+
+/* 缩略图按钮：整块可点，去掉 button 的默认外观 */
+.record-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line-soft);
+  background: #000;
+  cursor: pointer;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.record-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.72) contrast(1.04) brightness(0.86);
+  transition: filter 0.35s ease, transform 0.6s ease;
+}
+
+.record-card:hover .record-thumb img,
+.record-thumb:focus-visible img {
+  filter: saturate(0.9) contrast(1.06) brightness(0.95);
+  transform: scale(1.02);
+}
+
+.record-thumb:focus-visible {
+  outline: 1px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* 播放符号：方框里一个三角，不用图标字体 */
+.rec-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border: 1px solid rgba(217, 161, 59, 0.55);
+  background: rgba(10, 10, 8, 0.55);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.rec-play::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  margin: -7px 0 0 -4px;
+  border-style: solid;
+  border-width: 7px 0 7px 11px;
+  border-color: transparent transparent transparent var(--amber-bright);
+}
+
+.record-card:hover .rec-play {
+  border-color: var(--amber);
+  background: rgba(217, 161, 59, 0.16);
+}
+
+/* 左下时长（磁带计数器） / 右上画幅 */
+.rec-dur,
+.rec-ratio {
+  position: absolute;
+  z-index: 2;
+  padding: 2px 6px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  color: var(--ink-bright);
+  background: rgba(5, 5, 4, 0.72);
+  border: 1px solid var(--line);
+}
+
+.rec-dur { left: 8px; bottom: 8px; }
+.rec-ratio { right: 8px; top: 8px; color: var(--amber); }
+
+.record-body { padding: 13px 14px 15px; }
+
+.record-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
+
+.record-code { color: var(--amber); }
+
+.record-status {
+  white-space: nowrap;
+  color: var(--dim);
+}
+
+.record-status[data-status="PENDING"] { color: var(--amber-dim); }
+
+.record-title {
+  margin: 7px 0 8px;
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.5vw, 17px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink-bright);
+}
+
+.record-note {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--dim);
+}
+
+.record-meta {
+  display: flex;
+  gap: 12px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--dimmer);
+}
+
+/* 记录页（records.html）的顶部说明条 */
+.record-lede {
+  max-width: 68ch;
+  margin: 0 auto clamp(18px, 2.2vw, 26px);
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--dim);
+  text-align: center;
+}
+
+/* 视频灯箱 --------------------------------------------------- */
+.video-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 3vw, 40px);
+  background: rgba(4, 4, 3, 0.94);
+  backdrop-filter: blur(3px);
+}
+
+.video-lightbox.show { display: flex; }
+
+.video-stage {
+  position: relative;
+  width: min(1080px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 40px 80px -40px #000;
+}
+
+.video-el {
+  display: block;
+  width: 100%;
+  max-height: min(72vh, 720px);
+  background: #000;
+  object-fit: contain;
+}
+
+.video-caption {
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--line);
+  max-height: 26vh;
+  overflow-y: auto;
+}
+
+.vc-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--amber);
+}
+
+.vc-status { color: var(--dim); }
+.vc-status[data-status="PENDING"] { color: var(--amber-dim); }
+
+.vc-title {
+  margin: 6px 0 8px;
+  font-family: var(--serif);
+  font-size: clamp(17px, 2vw, 22px);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--ink-bright);
+}
+
+.vc-note {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--dim);
+}
+
+.vc-meta {
+  display: flex;
+  gap: 14px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--dimmer);
+}
+
+.video-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--ink);
+  background: rgba(5, 5, 4, 0.8);
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.video-close:hover,
+.video-close:focus-visible {
+  color: var(--amber-bright);
+  border-color: var(--amber-dim);
+}
+
+@media (max-width: 700px) {
+  .record-grid { grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); }
+  .record-note { font-size: 11.5px; line-height: 1.7; }
+  .video-el { max-height: 56vh; }
+  .video-caption { max-height: 34vh; }
 }
 
 /* ============================================================

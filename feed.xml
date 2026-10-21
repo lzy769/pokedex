@@ -8,6 +8,21 @@
   <lastBuildDate>Wed, 21 Oct 2026 01:00:00 GMT</lastBuildDate>
   <atom:link href="https://lzy769.github.io/pokedex/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
+    <title>v1.4.0 · 诡异实录：四段影像档案</title>
+    <link>https://lzy769.github.io/pokedex/changelog.html#v1.4.0</link>
+    <guid isPermaLink="false">pokedex-v1.4.0</guid>
+    <pubDate>Wed, 21 Oct 2026 01:00:00 GMT</pubDate>
+    <description>  • 新增「诡异实录」分区，收录 4 段来源不明的影像
+  • 独立档案页 records.html，首页同步出现分区入口
+  • 卡片记录可测量的事实：画幅、时长、平均亮度、色度偏移
+  • 视频灯箱播放器：支持进度拖动、Esc 关闭、点背景关闭
+  • 关闭播放器时释放视频源，不占用后台连接
+  • 视频 remux 为 faststart，边下边播，首帧不必等整段
+  • 四段影像的封面与缩略图转成 WebP
+  • Service Worker 不再拦截视频请求，避免破坏 Range 拖动
+  • 导航栏新增「诡异实录」入口（站内搜索也收录）</description>
+  </item>
+  <item>
     <title>v1.3.0 · 档案室扩建：收容措施、附录与检索</title>
     <link>https://lzy769.github.io/pokedex/changelog.html#v1.3.0</link>
     <guid isPermaLink="false">pokedex-v1.3.0</guid>

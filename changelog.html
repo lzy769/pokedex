@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>更新日志 · Old Pokémon Pokédex</title>
 
-  <meta name="description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.3.0（2026-10-21）。">
+  <meta name="description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.4.0（2026-10-21）。">
   <meta name="keywords" content="更新日志,更新记录,changelog,RSS">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Old Pokémon Pokédex">
   <meta property="og:url" content="https://lzy769.github.io/pokedex/changelog.html">
   <meta property="og:title" content="更新日志 · Old Pokémon Pokédex">
-  <meta property="og:description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.3.0（2026-10-21）。">
+  <meta property="og:description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.4.0（2026-10-21）。">
   <meta property="og:image" content="https://lzy769.github.io/pokedex/og-cover.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="更新日志 · Old Pokémon Pokédex">
-  <meta name="twitter:description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.3.0（2026-10-21）。">
+  <meta name="twitter:description" content="本站的全部更新记录：内容扩充、版式调整与工程改动。最新 1.4.0（2026-10-21）。">
   <meta name="twitter:image" content="https://lzy769.github.io/pokedex/og-cover.png">
   <link rel="alternate" type="application/rss+xml" title="老可梦图鉴 更新日志" href="feed.xml">
   <link rel="canonical" href="https://lzy769.github.io/pokedex/changelog.html">
@@ -49,11 +49,29 @@
 
   <section class="page-title">
     <h1>更新日志</h1>
-    <p>共 5 次更新 · 最新一次 2026-10-21 · <a href="feed.xml">RSS 订阅</a></p>
+    <p>共 6 次更新 · 最新一次 2026-10-21 · <a href="feed.xml">RSS 订阅</a></p>
   </section>
 
   <!-- 本页由 tools/build-feed.js 生成。要改内容请改脚本里的 RELEASES 再跑一次，不要手改本文件。 -->
   <ol class="changelog">
+    <li class="cl-item">
+      <div class="cl-head">
+        <span class="cl-ver">v1.4.0</span>
+        <time class="cl-date" datetime="2026-10-21">2026-10-21</time>
+      </div>
+      <h2 class="cl-title">诡异实录：四段影像档案</h2>
+      <ul class="cl-body">
+        <li>新增「诡异实录」分区，收录 4 段来源不明的影像</li>
+        <li>独立档案页 records.html，首页同步出现分区入口</li>
+        <li>卡片记录可测量的事实：画幅、时长、平均亮度、色度偏移</li>
+        <li>视频灯箱播放器：支持进度拖动、Esc 关闭、点背景关闭</li>
+        <li>关闭播放器时释放视频源，不占用后台连接</li>
+        <li>视频 remux 为 faststart，边下边播，首帧不必等整段</li>
+        <li>四段影像的封面与缩略图转成 WebP</li>
+        <li>Service Worker 不再拦截视频请求，避免破坏 Range 拖动</li>
+        <li>导航栏新增「诡异实录」入口（站内搜索也收录）</li>
+      </ul>
+    </li>
     <li class="cl-item">
       <div class="cl-head">
         <span class="cl-ver">v1.3.0</span>

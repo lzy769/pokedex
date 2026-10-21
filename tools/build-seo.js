@@ -101,6 +101,11 @@ const META = {
     desc: "站点与档案库的版本记录：每次新增了什么档案、什么功能。",
     kw: "更新日志,changelog,RSS,版本记录",
   },
+  "records.html": {
+    title: "诡异实录 · Old Pokémon Pokédex",
+    desc: "四段来源不明的影像档案。只登记载体本身：画幅、时长、亮度、色偏，以及它们没有被核实这件事。",
+    kw: "诡异实录,影像档案,录像,未核实,异常记录",
+  },
 };
 
 /* ---------- HTML 转义（属性值里不能出现裸引号） ---------- */
@@ -218,6 +223,9 @@ const today = new Date().toISOString().slice(0, 10);
 const pages = [
   "index.html",
   "works.html",
+  "records.html",
+  "timeline.html",
+  "changelog.html",
   "about.html",
   "sitemap.html",
   "hidden.html",

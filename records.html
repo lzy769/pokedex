@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>诡异实录 · Old Pokémon Pokédex</title>
+
+  <meta name="description" content="四段来源不明的影像档案。只登记载体本身：画幅、时长、亮度、色偏，以及它们没有被核实这件事。">
+  <meta name="keywords" content="诡异实录,影像档案,录像,未核实,异常记录">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Old Pokémon Pokédex">
+  <meta property="og:url" content="https://lzy769.github.io/pokedex/records.html">
+  <meta property="og:title" content="诡异实录 · Old Pokémon Pokédex">
+  <meta property="og:description" content="四段来源不明的影像档案。只登记载体本身：画幅、时长、亮度、色偏，以及它们没有被核实这件事。">
+  <meta property="og:image" content="https://lzy769.github.io/pokedex/og-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="诡异实录 · Old Pokémon Pokédex">
+  <meta name="twitter:description" content="四段来源不明的影像档案。只登记载体本身：画幅、时长、亮度、色偏，以及它们没有被核实这件事。">
+  <meta name="twitter:image" content="https://lzy769.github.io/pokedex/og-cover.png">
+  <link rel="canonical" href="https://lzy769.github.io/pokedex/records.html">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-en">Old Pokémon Pokédex</div>
+      <div class="brand-cn">老可梦图鉴</div>
+    </div>
+    <button class="menu-toggle" id="menuToggle">≡</button>
+    <nav id="mainNav">
+      <a href="index.html">首页</a>
+      <a href="works.html">图鉴</a>
+      <a href="records.html" class="active">诡异实录</a>
+      <a href="timeline.html">事件时间线</a>
+      <a href="about.html">关于我们</a>
+      <a href="changelog.html">更新日志</a>
+      <a href="index.html#contact">联系我们</a>
+    </nav>
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="搜索档案..." autocomplete="off">
+    </div>
+  </header>
+
+  <section class="page-title">
+    <h1>诡异实录</h1>
+    <p>四段影像 · 来源不明 · 内容未核实</p>
+  </section>
+
+  <p class="record-lede">
+    这里收录的四段影像没有可核实的来源。拍摄时间、拍摄者、拍摄地点都不在登记项里，
+    所以我们不写"画面里有什么"——那属于推测。下面每张卡片上写的是能被测量的事实：
+    画幅、时长、平均亮度、色度偏移。看完之后它是什么，由你自己判断。
+  </p>
+
+  <!-- 卡片由 data/recordings.js + data/render.js 生成，加一段录像只改数据文件 -->
+  <section class="records">
+    <span class="file-tag">Visual Evidence / 04 Items</span>
+    <div class="record-grid" data-record-grid></div>
+  </section>
+
+  <footer>
+    <div class="foot-brand">Old Pokémon Pokédex</div>
+    <div class="contact">
+      <div>联系我们</div>
+      <div>邮箱：<a href="mailto:lzy7690@163.com">lzy7690@163.com</a></div>
+      <div>电话：<a href="tel:18024248787">180-2424-8787</a></div>
+      <div>地址：广东省河源市屁王高级中学</div>
+    </div>
+    <div class="foot-time">
+      系统时间 <strong>----</strong>
+    </div>
+  </footer>
+
+  <!-- 顺序不能变：数据 → 渲染 → 交互（recordings.js 要在 render.js 之前） -->
+  <script src="data/entries.js"></script>
+  <script src="data/img-info.js"></script>
+  <script src="data/recordings.js"></script>
+  <script src="data/render.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+    }
+  </script>
+</body>
+</html>

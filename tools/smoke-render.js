@@ -20,6 +20,7 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const ENTRIES = path.join(ROOT, "data/entries.js");
 const IMGINFO = path.join(ROOT, "data/img-info.js");
+const RECS = path.join(ROOT, "data/recordings.js");
 const RENDER = path.join(ROOT, "data/render.js");
 
 let failures = 0;
@@ -54,7 +55,7 @@ function makeEl(attrs) {
 // 每个场景重建一次全局对象，避免上一个场景的 document 串味
 function loadRender(docSpec, search) {
   Object.keys(require.cache).forEach((k) => {
-    if (k === ENTRIES || k === IMGINFO || k === RENDER) delete require.cache[k];
+    if (k === ENTRIES || k === IMGINFO || k === RECS || k === RENDER) delete require.cache[k];
   });
 
   const nodes = {};
@@ -76,6 +77,8 @@ function loadRender(docSpec, search) {
   require(ENTRIES);
   // img-info.js 提供 window.IMG_INFO / window.SIZES；少了它 render.js 无法验证 srcset 接线
   require(IMGINFO);
+  // recordings.js 提供 window.RECORDINGS / window.RECORDS，诡异实录网格要用
+  require(RECS);
   require(RENDER);
 
   return { byId, bySelector, doc: global.document };
@@ -423,6 +426,36 @@ console.log("\n10. 访问计数块");
   const out = bySelector["[data-traffic]"].innerHTML;
   check(!/null/.test(out), "缺失的字段显示为 —，没有 null 字面量");
   check(/—/.test(out), "缺失字段用了占位符 —");
+}
+
+/* ---------- 11. 诡异实录：影像卡片 ---------- */
+console.log("11. 诡异实录（影像卡片）");
+{
+  const { bySelector } = loadRender({ bySelector: { "[data-record-grid]": {} } });
+  const out = bySelector["[data-record-grid]"].html;
+
+  const cards = count(out, /class="record-card"/g);
+  check(cards === 4, `渲染 4 张影像卡片，实际 ${cards}`);
+
+  [1, 2, 3, 4].forEach((id) => {
+    check(out.includes('data-record-open="' + id + '"'), `REC-00${id} 可点击播放`);
+  });
+
+  // 视频只在点开时才加载：卡片本身不能出现 mp4，否则首屏就要下 18 MB
+  check(!/\.mp4/.test(out), "卡片里不挂 mp4 地址（点开才加载）");
+
+  const thumbs = count(out, /src="videos\/rec-\d{3}\.thumb\.webp"/g);
+  check(thumbs === 4, `4 张缩略图都指向 webp，实际 ${thumbs}`);
+  check(count(out, /class="rec-ratio"/g) === 4, "4 个画幅角标");
+  check(count(out, /width="480"/g) === 4, "缩略图写了宽度，避免加载时跳版");
+  check(out.includes('height="854"') && out.includes('height="278"'), "竖幅与横幅各自写出真实高度");
+  check(out.includes("00:29.7"), "显示磁带式时间码");
+  check(/aria-label="播放 REC-001 余温"/.test(out), "播放按钮有可读的无障碍名称");
+  check(!/undefined|NaN/.test(out), "没有 undefined / NaN 泄漏");
+
+  const r3 = global.window.RECORDS.find(3);
+  check(!!r3 && r3.code === "REC-003", "RECORDS.find(3) 取到 REC-003");
+  check(global.window.RECORDS.find(99) === null, "查不到时返回 null，不是 undefined");
 }
 
 /* ---------- 汇总 ---------- */
