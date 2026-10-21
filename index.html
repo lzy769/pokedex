@@ -333,10 +333,17 @@
     const contactForm = document.getElementById("contactForm");
     if (contactForm) {
       const feedback = document.getElementById("contactFeedback");
-      const setFeedback = (kind, msg) => {
+      // 反馈区可以附一个链接（联系服务未接入时用来兜底发邮件）
+      const setFeedback = (kind, msg, link) => {
         if (!feedback) return;
-        feedback.textContent = msg;
         feedback.className = "form-feedback " + kind;
+        feedback.textContent = msg;
+        if (link) {
+          const a = document.createElement("a");
+          a.href = link.href;
+          a.textContent = link.text;
+          feedback.append(" ", a);
+        }
       };
 
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -351,9 +358,15 @@
         if (!emailRe.test(email)) { setFeedback("error", "邮箱格式看起来不对，请检查一下。"); return; }
         if (message.length < 5) { setFeedback("error", "想说的内容太少了，再多写一点吧。"); return; }
 
-        // action 里的 Formspree ID 还是占位符时，直接提示，不要发必然失败的请求
+        // action 里还是占位符 xxxxxxxx 时不发必然失败的请求，改成交给邮件客户端：
+        // 表单今天就能用，不至于点了毫无反应。
         if (/xxxxxxxx/.test(contactForm.action)) {
-          setFeedback("error", "留言服务还没配置：请把表单 action 里的 xxxxxxxx 换成你自己的 Formspree ID 后再提交。");
+          const mailto = "mailto:lzy7690@163.com"
+            + "?subject=" + encodeURIComponent("[老可梦图鉴] 来自 " + name + " 的留言")
+            + "&body=" + encodeURIComponent(message + "\n\n—— " + name + " <" + email + ">");
+          setFeedback("error", "留言服务尚未接入，已尝试唤起邮件客户端。没反应就点这里 →",
+            { href: mailto, text: "直接发邮件" });
+          window.location.href = mailto;
           return;
         }
 
