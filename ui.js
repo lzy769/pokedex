@@ -173,9 +173,19 @@
   function openLightbox(href, src, name, desc) {
     lbImg.src = src;
     lbImg.alt = name;
-    lbCaption.innerHTML =
-      '<div class="lb-name">' + name + '</div>' +
-      (desc ? '<div class="lb-desc">' + desc + '</div>' : '');
+    // 灯箱标题/描述来自静态档案数据，但一律用 textContent 写入，
+    // 避免名字/描述里若含 < > & 等字符被当作 HTML 解析。
+    lbCaption.textContent = '';
+    const lbName = document.createElement('div');
+    lbName.className = 'lb-name';
+    lbName.textContent = name;
+    lbCaption.appendChild(lbName);
+    if (desc) {
+      const lbDesc = document.createElement('div');
+      lbDesc.className = 'lb-desc';
+      lbDesc.textContent = desc;
+      lbCaption.appendChild(lbDesc);
+    }
     // 详情页的现场附件没有"下一页"，href 是 #，这时把按钮藏起来而不是留个死链
     if (!href || href === "#") {
       lbEnter.style.display = "none";
@@ -241,13 +251,16 @@
   // 档案条目：由唯一数据源生成；若某页漏引 data/entries.js，就退化成只能搜页面
   const DEX = window.POKEDEX;
   const ENTRY_INDEX = DEX
-    ? DEX.entries.map((e) => ({
-        title: e.name,
-        sub: `档案 ${e.code} · ${DEX.category(e.cat).name}`,
-        url: `view.html?id=${e.id}`,
-        code: String(e.code).replace(/[^0-9]/g, ""),
-        kw: `${e.code} ${e.id} ${e.status} ${e.lead} ${(e.tags || []).join(" ")} ${e.place || ""}`,
-      }))
+    ? DEX.entries.map((e) => {
+        const cat = DEX.category(e.cat);
+        return {
+          title: e.name,
+          sub: `档案 ${e.code} · ${cat ? cat.name : "未知分类"}`,
+          url: `view.html?id=${e.id}`,
+          code: String(e.code).replace(/[^0-9]/g, ""),
+          kw: `${e.code} ${e.id} ${e.status} ${e.lead} ${(e.tags || []).join(" ")} ${e.place || ""}`,
+        };
+      })
     : [];
 
   const SITE_INDEX = ENTRY_INDEX.concat(PAGE_INDEX);
@@ -271,7 +284,7 @@
 
     /* ---------- 2) 工具函数 ---------- */
     // 转义，避免档案名里出现 < > 等字符时破坏结构
-    const escapeHtml = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const escapeHtml = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
     const closeBox = () => {
       box.hidden = true;
@@ -447,7 +460,12 @@
     if (!href) return;
     if (href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("javascript:")) return;
 
-    const isInternal = !href.startsWith("http") || href.includes(window.location.hostname);
+    // 用 origin 比较，避免 //evil.com 这类协议相对 URL、或 hostname 作子串的外部 URL 被误判为内部。
+    // 非同源或非法 URL 一律不做站内转场拦截，交由浏览器正常导航。
+    let isInternal = false;
+    try {
+      isInternal = new URL(href, window.location.href).origin === window.location.origin;
+    } catch { /* 非法 URL，一律按外部处理，不拦截 */ }
     if (!isInternal) return;
 
     // 如果是在播放音乐，记录当前时间
@@ -834,7 +852,7 @@
   // 转义：拼属性值时用，避免数据里的引号破坏结构
   const attr = (s) =>
     String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
     );
 
   // ---- 15. 减弱开关：状态存 localStorage，翻页/刷新都保持 ----

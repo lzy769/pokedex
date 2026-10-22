@@ -371,6 +371,16 @@ if (PWA) {
   if (noTheme.length) fail("这些页面没有 theme-color：" + noTheme.join(", "));
   else pass("全部页面都有 theme-color");
 
+// 每个页面的 <script> 开/闭标签必须配对，防止「缺开标签 / 孤立 </script>」导致 JS 源码被当页面文本渲染。
+const badScript = htmlFiles.filter((f) => {
+  const h = read(f);
+  const opens = h.split("<script").length - 1;
+  const closes = h.split("</script>").length - 1;
+  return opens !== closes;
+});
+if (badScript.length) fail("这些页面 <script> 标签开闭不配对：" + badScript.join(", "));
+else pass(htmlFiles.length + " 个页面 <script> 标签开闭配对");
+
   if (exists("ui.js")) {
     if (!/serviceWorker\.register\("sw\.js"\)/.test(read("ui.js"))) fail("ui.js 没有注册 service worker");
     else pass("ui.js 注册了 sw.js");

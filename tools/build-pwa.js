@@ -284,6 +284,8 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(req)
         .then((res) => {
+          // 只把正常同源响应写进缓存：404/500 等错误页不得被固化
+          if (!res || res.status !== 200 || res.type !== "basic") return res;
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(req, copy));
           return res;
@@ -298,7 +300,7 @@ self.addEventListener("fetch", (event) => {
   // 视频直接放行，不进 Service Worker：<video> 会发 Range 请求，缓存整段会让
   // 拖进度条变成"重下一遍"；而且四段录像合计 18 MB，不值得塞进缓存。
   // 注意 bgm.mp3 不在此列 —— 它是缓存优先，第二次进站就不必再下 5 MB。
-  if (/\.(mp4|webm|ogv|m4v)$/i.test(url.pathname)) return;
+  if (/\\.(mp4|webm|ogv|m4v)$/i.test(url.pathname)) return;
 
   // 其余静态资源：缓存优先，未命中再联网并顺手存下来
   event.respondWith(

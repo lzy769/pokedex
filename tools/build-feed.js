@@ -117,7 +117,8 @@ function esc(s) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function rfc822(dateStr) {
@@ -216,6 +217,7 @@ ${list}
        少了它，本页搜索框能弹出、但永远搜不到档案 —— check-site.js 会把这种情况拦下来。 -->
   <script src="data/entries.js"></script>
   <script src="ui.js"></script>
+  <script>
     const mainNav = document.getElementById("mainNav");
     if (menuToggle && mainNav) {
       menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));

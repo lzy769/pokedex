@@ -30,7 +30,7 @@
   // HTML 转义：拼字符串时所有"来自数据"的文本都要过一遍，避免名字里出现 < > 破坏结构
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
 
@@ -324,6 +324,22 @@
       var cat2 = P.category(entry.cat);
 
       document.title = entry.name + " · Old Pokémon Pokédex";
+
+      // 详情页元数据：给每条档案独立的 description / canonical / og:*，
+      // 避免 11 条档案被搜索引擎归并为同一个空壳页（view.html 只有一套静态 meta）。
+      var descMeta = document.querySelector('meta[name="description"]');
+      var ogTitleEl = document.querySelector('meta[property="og:title"]');
+      var ogDescEl = document.querySelector('meta[property="og:description"]');
+      var ogUrlEl = document.querySelector('meta[property="og:url"]');
+      var canonicalEl = document.querySelector('link[rel="canonical"]');
+      var entryDesc = entry.name + " · " + (cat2 ? cat2.name : "未分类") + "：档案 " + entry.code + " 的完整记录。";
+      var entryUrl = window.location.origin + window.location.pathname + "?id=" + entry.id;
+      if (descMeta) descMeta.setAttribute("content", entryDesc);
+      if (ogTitleEl) ogTitleEl.setAttribute("content", entry.name + " · Old Pokémon Pokédex");
+      if (ogDescEl) ogDescEl.setAttribute("content", entryDesc);
+      if (ogUrlEl) ogUrlEl.setAttribute("content", entryUrl);
+      if (canonicalEl) canonicalEl.setAttribute("href", entryUrl);
+
       imgEl.src = webpOf(entry.img);
       imgEl.alt = entry.name;
       // 详情页大图也走 srcset：手机上一张 1920px 的图纯属浪费流量
@@ -473,7 +489,9 @@
   var lostEl = document.querySelector("[data-lost-suggest]");
   if (lostEl) {
     var recent = P.entries.slice().sort(function (a, b) {
-      return String(b.found || "") < String(a.found || "") ? -1 : 1;
+      const x = String(b.found || "");
+      const y = String(a.found || "");
+      return x < y ? -1 : (x > y ? 1 : 0);
     }).slice(0, 3);
     lostEl.innerHTML = recent
       .map(function (e) {

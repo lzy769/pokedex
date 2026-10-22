@@ -161,6 +161,10 @@ HTML_FILES.forEach((file) => {
     const idx = html.indexOf("</title>");
     if (idx < 0) { console.log("  [warn] " + file + " 没有 <title>，跳过 meta"); return; }
     const end = html.indexOf("\n", idx);
+    if (end < 0) {
+      console.log("  [warn] " + file + " </title> 后无换行，跳过 meta 插入");
+      return;
+    }
     html = html.slice(0, end + 1) + "\n" + metaTag(m, file) + html.slice(end + 1);
   }
 
@@ -198,6 +202,14 @@ HTML_FILES.forEach((file) => {
     const anchor = '<link rel="stylesheet" href="style.css">';
     if (html.includes(anchor)) {
       html = html.replace(anchor, '<link rel="canonical" href="' + SITE_BASE + file + '">\n  ' + anchor);
+    }
+  }
+
+  // hidden.html（彩蛋 / 兜底页）不应被搜索引擎收录
+  if (file === "hidden.html" && !/name="robots"/.test(html)) {
+    const anchor = '<link rel="stylesheet" href="style.css">';
+    if (html.includes(anchor)) {
+      html = html.replace(anchor, '<meta name="robots" content="noindex,follow">\n  ' + anchor);
     }
   }
 
@@ -247,7 +259,14 @@ const entries_xml = entries
       "    <lastmod>" + today + "</lastmod>\n" +
       "    <changefreq>monthly</changefreq>\n" +
       "    <priority>0.8</priority>\n" +
-      "    <news:title>" + esc(e.name) + (cat ? " · " + esc(cat.name) : "") + "</news:title>\n" +
+      "    <news:news>\n" +
+      "      <news:publication>\n" +
+      "        <news:name>老可梦图鉴</news:name>\n" +
+      "        <news:language>zh</news:language>\n" +
+      "      </news:publication>\n" +
+      "      <news:publication_date>" + today + "</news:publication_date>\n" +
+      "      <news:title>" + esc(e.name) + (cat ? " · " + esc(cat.name) : "") + "</news:title>\n" +
+      "    </news:news>\n" +
       "  </url>"
     );
   })

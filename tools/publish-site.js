@@ -68,6 +68,7 @@ function collect() {
         // tools/ci 整目录只通过 RELOCATE 出去，不原样发布
         if (rel === "tools/ci") {
           for (const f of fs.readdirSync(abs)) {
+            if (f.endsWith(".lock")) continue;
             const key = "tools/ci/" + f;
             if (!RELOCATE.has(key)) bail("tools/ci/ 里有没登记搬迁规则的文件：" + key + "（请加进 RELOCATE）");
             seenCi.add(key);

@@ -115,8 +115,11 @@ window.imgFull = function (name) {
       // webp 尺寸比原图小才换；万一某张 webp 反而更大就保留原图
       const useWebp = rec.full !== src;
       let out = tag
-        .replace(/\bsrc\s*=\s*"[^"]*"/, 'src="' + (useWebp ? rec.full : src) + '"')
-        .replace(/\balt\s*=/, 'width="' + rec.w + '" height="' + rec.h + '" alt=');
+        .replace(/\bsrc\s*=\s*"[^"]*"/, 'src="' + (useWebp ? rec.full : src) + '"');
+      // 无论是否有 alt，都补上宽高，避免图片加载时的布局跳动
+      if (!/\bwidth\s*=/.test(out)) {
+        out = out.replace(/(\bsrc\s*=\s*"[^"]*")/, '$1 width="' + rec.w + '" height="' + rec.h + '"');
+      }
 
       if (useWebp && rec.small && !/\bsizes\s*=/.test(out)) {
         out = out.replace(

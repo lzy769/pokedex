@@ -23,7 +23,7 @@ function listAssets() {
   const dataDir = path.join(ROOT, "data");
   if (fs.existsSync(dataDir)) {
     fs.readdirSync(dataDir).forEach((f) => {
-      if (f.endsWith(".js")) out.push("data/" + f);
+      if (f.endsWith(".js") && f !== "traffic.js") out.push("data/" + f);
     });
   }
 

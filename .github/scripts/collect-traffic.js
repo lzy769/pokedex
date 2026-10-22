@@ -30,6 +30,10 @@ const fs = require("fs");
 const path = require("path");
 
 const REPO = process.env.REPO || process.env.GITHUB_REPOSITORY;
+if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(REPO)) {
+  console.error(`非法 REPO 值，拒绝发送令牌：${REPO}`);
+  process.exit(1);
+}
 const TOKEN = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
 // __dirname 在线上是 <仓库根>/.github/scripts → 上溯两级就是站点根
 const TARGET = path.resolve(__dirname, "../../data/traffic.js");
