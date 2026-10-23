@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>调取档案中... · Old Pokémon Pokédex</title>
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Old Pokémon Pokédex",
+  "alternateName": "老可梦图鉴",
+  "url": "https://lzy769.github.io/pokedex/view.html",
+  "description": "档案详情页：按编号调取某条档案的影像、导语与完整记录。"
+}</script>
 
   <meta name="description" content="档案详情页：按编号调取某条档案的影像、导语与完整记录。">
   <meta name="keywords" content="档案详情,编号检索,个体档案">
@@ -21,12 +29,16 @@
   <meta name="twitter:image" content="https://lzy769.github.io/pokedex/og-cover.png">
   <link rel="canonical" href="https://lzy769.github.io/pokedex/view.html">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="ui-features.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0f1418">
   <meta name="apple-mobile-web-app-title" content="老可梦图鉴">
 </head>
 <body>
+  <!-- 档案阅读进度条（批次 A #4）：正文滚动到哪就显示进度 -->
+  <div class="reading-bar" aria-hidden="true"><div class="reading-bar-fill" data-reading-progress style="width:0%"></div></div>
+
   <header>
     <div>
       <div class="brand-en">Old Pokémon Pokédex</div>
@@ -59,6 +71,15 @@
     <nav class="crumb" id="monsterCrumb" aria-label="面包屑"></nav>
 
     <h1 id="monsterName">加载中...</h1>
+
+    <!-- 收藏 / 取消收藏（批次 A #3）：状态由 ui-features.js 同步 -->
+    <div class="fav-toggle-wrap">
+      <button class="opp-btn fav-toggle" type="button" data-fav-toggle aria-pressed="false" title="收藏这条档案（快捷键 f）">☆ 收藏档案</button>
+      <!-- 批次 D：分享 / 复制链接 / 提交目击报告（纯前端，无后端） -->
+      <button class="opp-btn share-btn" type="button" data-share-entry title="分享这条档案">分享</button>
+      <button class="opp-btn copy-btn" type="button" data-copy-link title="复制档案链接">复制链接</button>
+      <button class="opp-btn report-btn" type="button" data-report-entry title="提交目击报告">目击报告</button>
+    </div>
 
     <!-- 文档头的四格元数据，由 render.js 按 ?id= 填入 -->
     <div class="doc-fields">
@@ -93,6 +114,9 @@
     <section class="doc-block related-block" id="monsterRelated" hidden></section>
 
     <nav class="entry-nav" data-entry-nav aria-label="档案翻页"></nav>
+
+    <!-- 访客留言（批次 E #17）：由 ui-features.js 读 localStorage 渲染 -->
+    <section class="comments-block" data-comments></section>
     <a class="back-link" href="works.html" data-back-category>← 返回档案室</a>
   </section>
 
@@ -121,5 +145,6 @@
       menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
     }
   </script>
+  <script src="ui-features.js"></script>
 </body>
 </html>

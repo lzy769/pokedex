@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>图鉴 · Old Pokémon Pokédex</title>
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Old Pokémon Pokédex",
+  "alternateName": "老可梦图鉴",
+  "url": "https://lzy769.github.io/pokedex/works.html",
+  "description": "档案室总览，按「远古恐惧 / 未知之厄 / 人类希望」三大分类浏览。"
+}</script>
 
   <meta name="description" content="档案室总览，按「远古恐惧 / 未知之厄 / 人类希望」三大分类浏览。">
   <meta name="keywords" content="图鉴,分类,远古恐惧,未知之厄,人类希望">
@@ -21,6 +29,7 @@
   <meta name="twitter:image" content="https://lzy769.github.io/pokedex/og-cover.png">
   <link rel="canonical" href="https://lzy769.github.io/pokedex/works.html">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="ui-features.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0f1418">
@@ -56,6 +65,12 @@
   <!-- 三个分类入口由 data/entries.js + data/render.js 渲染，改分类名只需改数据 -->
   <section class="entry-grid" data-category-list></section>
 
+  <!-- 我的收藏（批次 A #3）：由 ui-features.js 读 localStorage 渲染 -->
+  <section class="favs-block" data-favs-list hidden></section>
+
+  <!-- 本机热度排行（批次 D #18）：由 ui-features.js 基于 localStorage 访问计数渲染 -->
+  <section class="hot-block" data-hot-list></section>
+
   <!-- 只有在 ?tag=xxx 时才显示：该标签下的全部档案 -->
   <section class="tag-results" data-tag-results hidden></section>
 
@@ -83,5 +98,6 @@
       menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
     }
   </script>
+  <script src="ui-features.js"></script>
 </body>
 </html>

@@ -32,6 +32,8 @@ require(path.join(ROOT, "data", "entries.js"));
 const P = global.window.POKEDEX;
 const entries = P.entries;
 const cats = P.categories;
+require(path.join(ROOT, "data", "img-info.js"));
+const IMG_INFO = global.window.IMG_INFO || {};
 
 /* ---------- 各页面的描述与关键词 ---------- */
 const SITE = "Old Pokémon Pokédex";
@@ -223,6 +225,22 @@ HTML_FILES.forEach((file) => {
     }
   }
 
+  // JSON-LD 结构化数据（幂等）：WebSite。搜索引擎据此理解站点标题与描述。
+  if (!/application\/ld\+json/.test(html) && html.includes("</title>")) {
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: SITE,
+      alternateName: "老可梦图鉴",
+      url: SITE_BASE + file,
+      description: m.desc,
+    };
+    html = html.replace(
+      "</title>",
+      '</title>\n  <script type="application/ld+json">' + JSON.stringify(jsonLd, null, 2) + "</script>"
+    );
+  }
+
   if (html !== before) {
     write(file, html);
     patched++;
@@ -253,12 +271,19 @@ const pages = [
 const entries_xml = entries
   .map((e) => {
     const cat = P.category(e.cat);
+    const wf = IMG_INFO[e.img] && IMG_INFO[e.img].full;
     return (
       "  <url>\n" +
       "    <loc>" + SITE_BASE + "view.html?id=" + e.id + "</loc>\n" +
       "    <lastmod>" + today + "</lastmod>\n" +
       "    <changefreq>monthly</changefreq>\n" +
       "    <priority>0.8</priority>\n" +
+      (wf
+        ? "    <image:image>\n" +
+          "      <image:loc>" + SITE_BASE + wf + "</image:loc>\n" +
+          "    </image:image>\n"
+        : "") +
+
       "    <news:news>\n" +
       "      <news:publication>\n" +
       "        <news:name>老可梦图鉴</news:name>\n" +
@@ -279,7 +304,7 @@ const pages_xml = pages
 write(
   "sitemap.xml",
   `<?xml version="1.0" encoding="UTF-8"?>\n` +
-  `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n` +
+  `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n` +
   pages_xml + "\n" + entries_xml + "\n</urlset>\n"
 );
 console.log(`[ok] sitemap.xml：${pages.length} 个页面 + ${entries.length} 条档案`);

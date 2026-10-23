@@ -1,6 +1,6 @@
 /* 本文件由 tools/build-pwa.js 生成，不要手改 —— 改完再跑一次脚本即可。
  * 缓存版本是预缓存清单的 sha256 前 10 位，所以内容一变版本就变。 */
-const CACHE = "pokedex-9dcb91fa9b";
+const CACHE = "pokedex-c2113b4340";
 const OFFLINE_URL = "404.html";
 const PRECACHE = [
   "1-800.webp",
@@ -62,6 +62,7 @@ const PRECACHE = [
   "sitemap.xml",
   "style.css",
   "timeline.html",
+  "ui-features.css",
   "ui.js",
   "view.html",
   "work1.html",

@@ -1,0 +1,685 @@
+/* ============================================================================
+ * ui-features.css —— 站点增强功能样式（批次 A）
+ * ----------------------------------------------------------------------------
+ * 说明：新功能独立成文件，避免在 style.css 末尾追加覆盖规则。
+ *      所有 class 前缀 "opp-" 与站点既有 class 隔离。
+ * ========================================================================== */
+
+/* ============================================================
+ * 1. 通用按钮（header 里的随机档案 / 主题切换 / 详情页收藏）
+ * ============================================================ */
+.opp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--amber, #7fb3c7);
+  background: var(--panel, #151c21);
+  border: 1px solid var(--line, #2a343c);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.1s;
+  user-select: none;
+}
+.opp-btn:hover {
+  border-color: var(--amber, #7fb3c7);
+  background: var(--panel-2, #1b242a);
+  color: var(--amber-bright, #a8ceda);
+}
+.opp-btn:active {
+  transform: translateY(1px);
+}
+.opp-btn:focus-visible {
+  outline: 2px solid var(--amber, #7fb3c7);
+  outline-offset: 2px;
+}
+
+/* header 里的两个按钮紧凑一些 */
+header .opp-btn {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+/* ============================================================
+ * 2. 阅读进度条（详情页顶部，固定）
+ * ============================================================ */
+.reading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 9999;
+  pointer-events: none;
+}
+.reading-bar-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber, #7fb3c7), var(--orange, #e88b4a));
+  transition: width 0.12s linear;
+}
+
+/* ============================================================
+ * 3. 收藏按钮（详情页）
+ * ============================================================ */
+.fav-toggle-wrap {
+  margin: 8px 0 18px;
+}
+.fav-toggle {
+  color: var(--amber, #7fb3c7);
+}
+.fav-toggle.active {
+  color: var(--orange, #e88b4a);
+  border-color: var(--orange, #e88b4a);
+  background: rgba(232, 139, 74, 0.08);
+}
+.fav-toggle.active:hover {
+  color: var(--orange-bright, #f09a55);
+  border-color: var(--orange-bright, #f09a55);
+}
+
+/* ============================================================
+ * 4. 我的收藏列表（works.html）
+ * ============================================================ */
+.favs-block {
+  margin: 32px auto;
+  max-width: 960px;
+  padding: 0 16px;
+}
+.favs-block .doc-h {
+  margin-bottom: 14px;
+}
+.fav-count {
+  color: var(--dim, #8a96a0);
+  font-weight: 400;
+  font-size: 0.85em;
+}
+.favs-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.fav-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--panel, #151c21);
+  border: 1px solid var(--line, #2a343c);
+  border-radius: 2px;
+  color: var(--ink-bright, #f5f7f8);
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.1s, background 0.15s;
+}
+.fav-card:hover {
+  border-color: var(--amber, #7fb3c7);
+  background: var(--panel-2, #1b242a);
+  transform: translateY(-2px);
+}
+.fav-code {
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--amber, #7fb3c7);
+  letter-spacing: 0.06em;
+}
+.fav-name {
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink-bright, #f5f7f8);
+}
+.fav-status {
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--dim, #8a96a0);
+}
+.fav-status[data-status="KETER"],
+.fav-status[data-status="DANGER"] {
+  color: var(--red-bright, #e56a5a);
+}
+.fav-status[data-status="SAFE"] {
+  color: var(--safe, #7fb3c7);
+}
+.fav-status[data-status="EUCLID"] {
+  color: var(--warning, #d9a03b);
+}
+.favs-empty {
+  padding: 20px 0;
+  color: var(--dim, #8a96a0);
+  font-size: 14px;
+  border-top: 1px dashed var(--line, #2a343c);
+  border-bottom: 1px dashed var(--line, #2a343c);
+}
+.favs-empty kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--line, #2a343c);
+  border-radius: 2px;
+  background: var(--panel, #151c21);
+  color: var(--amber, #7fb3c7);
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 12px;
+}
+
+/* ============================================================
+ * 5. 亮色主题（theme-light）
+ *    通过 CSS 变量覆盖实现，不改任何组件的规则
+ * ============================================================ */
+html.theme-light {
+  --bg: #f4f6f8;
+  --bg-deep: #e8ecef;
+  --panel: #ffffff;
+  --panel-2: #eef2f5;
+
+  --line: #cfd8df;
+  --line-soft: #dfe6ec;
+  --line-focus: #a8c4d4;
+
+  --ink: #3d4c57;
+  --ink-bright: #16212b;
+  --dim: #5f707c;
+  --dimmer: #8797a2;
+
+  --amber: #2c6e86;
+  --amber-bright: #1f8db0;
+  --amber-dim: rgba(44, 110, 134, 0.18);
+
+  --red: #b3372a;
+  --red-bright: #a92e1e;
+  --warning: #9a6b18;
+  --safe: #2c6e86;
+  --green: #2c6e86;
+
+  --orange: #b96a2e;
+  --orange-bright: #9a5420;
+  --orange-deep: #b96a2e;
+  --orange-ink: #ffffff;
+}
+
+/* 亮色下让扫描线/噪点装饰更淡，避免糊成一片 */
+html.theme-light .hero-bg-text {
+  opacity: 0.06;
+}
+html.theme-light body {
+  background: var(--bg-deep, #e8ecef);
+}
+
+/* ============================================================
+ * 6. 响应式微调
+ * ============================================================ */
+@media (max-width: 640px) {
+  header .opp-btn {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+  .favs-strip {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+/* ============================================================
+ * 7. 批次 B：档案章节导航 / 交叉引用 / 搜索高亮
+ * ============================================================ */
+/* 正文章节导航条 */
+.section-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 14px 0 18px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.08));
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+}
+.section-toc .toc-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-mute, #8a8a8a);
+  margin-right: 4px;
+}
+.section-toc .toc-link {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text, #e6e6e6);
+  background: transparent;
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.14));
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.section-toc .toc-link:hover {
+  background: var(--accent, #8b1e1e);
+  color: #fff;
+  border-color: transparent;
+}
+html.theme-light .section-toc {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+html.theme-light .section-toc .toc-link {
+  color: #222;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+/* 正文交叉引用链接：下划线 + 悬停提示 */
+.entry-desc a.xref-link {
+  color: var(--accent-soft, #d98a5a);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+.entry-desc a.xref-link:hover {
+  text-decoration-style: solid;
+}
+
+/* 卡片搜索高亮 */
+mark.hl {
+  background: var(--hl, #ffd54a);
+  color: #000;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+ * 8. 批次 C：详情页「疑似相关影像」卡片
+ * ============================================================ */
+.record-link-block {
+  margin-top: 8px;
+}
+.record-link-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.record-link-card {
+  position: relative;
+  display: block;
+  width: 200px;
+  padding: 8px;
+  text-align: left;
+  color: inherit;
+  background: var(--card-bg, rgba(0, 0, 0, 0.35));
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+.record-link-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent, #8b1e1e);
+}
+.record-link-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+}
+.record-link-card .rl-code {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--text-mute, #8a8a8a);
+}
+.record-link-card .rl-title {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--text, #e6e6e6);
+}
+.record-link-card .rl-duration {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  padding: 1px 6px;
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.14));
+  border-radius: 999px;
+  color: var(--text-mute, #8a8a8a);
+}
+.record-link-note {
+  flex: 1 1 220px;
+  max-width: 380px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-mute, #8a8a8a);
+}
+
+/* ============================================================
+ * 9. 批次 D：分享 / 复制链接 / 目击报告 / 本机热度排行
+ * ============================================================ */
+
+/* 顶部小提示 toast */
+.flash-toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translate(-50%, -12px);
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #fff;
+  background: var(--accent, #8b1e1e);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+}
+.flash-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+html.theme-light .flash-toast {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* 目击报告表单（内嵌在详情页，点按钮展开/收起） */
+.report-panel {
+  margin-top: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.12));
+  background: var(--card-bg, rgba(0, 0, 0, 0.3));
+  border-radius: 6px;
+  display: grid;
+  gap: 12px;
+}
+.report-panel[hidden] { display: none; }
+.report-h {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text, #e6e6e6);
+}
+.report-tip {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-mute, #8a8a8a);
+}
+.report-field {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-mute, #8a8a8a);
+}
+.report-field input,
+.report-field textarea {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text, #e6e6e6);
+  background: var(--bg, #0b0f12);
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.16));
+  border-radius: 4px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+.report-field input:focus,
+.report-field textarea:focus {
+  outline: none;
+  border-color: var(--accent-soft, #d98a5a);
+}
+.report-actions {
+  display: flex;
+  gap: 10px;
+}
+html.theme-light .report-panel {
+  background: #f4f6f8;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+html.theme-light .report-field input,
+html.theme-light .report-field textarea {
+  color: #222;
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+/* 本机热度排行 */
+.hot-block { margin-top: 26px; }
+.hot-h {
+  margin: 0 0 12px;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mute, #8a8a8a);
+}
+.hot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.hot-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--card-bg, rgba(0, 0, 0, 0.3));
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.1));
+  border-radius: 4px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+.hot-item:hover {
+  border-color: var(--accent-soft, #d98a5a);
+  transform: translateX(3px);
+}
+.hot-code {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-mute, #8a8a8a);
+  min-width: 40px;
+}
+.hot-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text, #e6e6e6);
+}
+.hot-count {
+  font-size: 12px;
+  color: var(--accent-soft, #d98a5a);
+}
+.hot-note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-mute, #8a8a8a);
+}
+html.theme-light .hot-item {
+  background: #f4f6f8;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+html.theme-light .hot-name { color: #222; }
+
+/* 分享 / 复制 / 目击报告按钮（复用 .opp-btn 通用样式） */
+.share-btn,
+.copy-btn,
+.report-btn { font-family: inherit; }
+
+/* ============================================================
+ * 10. 批次 E：RSS 订阅 / 更新提示 / PWA 安装 / 访客评论 / 打印版
+ * ============================================================ */
+
+/* 导航里的 RSS 链接 */
+.rss-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-soft, #d98a5a);
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.14));
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.rss-link:hover {
+  background: var(--accent, #8b1e1e);
+  color: #fff;
+  border-color: transparent;
+}
+html.theme-light .rss-link {
+  color: var(--accent, #2c6e86);
+  border-color: rgba(0, 0, 0, 0.18);
+}
+html.theme-light .rss-link:hover {
+  background: var(--accent, #2c6e86);
+  color: #fff;
+}
+
+/* 站点更新提示条 */
+.update-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--text, #e6e6e6);
+  background: var(--card-bg, rgba(0, 0, 0, 0.85));
+  border: 1px solid var(--accent-soft, #d98a5a);
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+html.theme-light .update-toast {
+  color: #222;
+  background: #fff;
+  border-color: var(--accent, #2c6e86);
+}
+
+/* PWA 安装按钮 */
+.install-btn { font-family: inherit; }
+
+/* 访客留言 */
+.comments-block { margin-top: 28px; }
+.comments-h {
+  margin: 0 0 12px;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mute, #8a8a8a);
+}
+.comments-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.comment-item {
+  padding: 10px 12px;
+  background: var(--card-bg, rgba(0, 0, 0, 0.3));
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.1));
+  border-radius: 4px;
+}
+.comment-when {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-mute, #8a8a8a);
+}
+.comment-text {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text, #e6e6e6);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.comments-empty {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--text-mute, #8a8a8a);
+}
+.comments-form { display: grid; gap: 8px; }
+.comments-form textarea {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text, #e6e6e6);
+  background: var(--bg, #0b0f12);
+  border: 1px solid var(--line-weak, rgba(255, 255, 255, 0.16));
+  border-radius: 4px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+.comments-form textarea:focus {
+  outline: none;
+  border-color: var(--accent-soft, #d98a5a);
+}
+.comments-actions { display: flex; justify-content: flex-end; }
+.comments-note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--text-mute, #8a8a8a);
+}
+html.theme-light .comment-item {
+  background: #f4f6f8;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+html.theme-light .comment-text { color: #222; }
+html.theme-light .comments-form textarea {
+  color: #222;
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+/* 打印版（#6）：隐藏装饰与交互，只留正文与档案信息 */
+@media print {
+  header .search-box,
+  header .menu-toggle,
+  header .opp-btn,
+  .rss-link,
+  .fav-toggle-wrap,
+  .reading-bar,
+  .entry-nav,
+  .report-panel,
+  .report-btn,
+  .share-btn,
+  .copy-btn,
+  .comments-block,
+  .hot-block,
+  .flash-toast,
+  .update-toast,
+  .section-toc,
+  .record-link-block,
+  footer {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 12pt;
+    line-height: 1.55;
+  }
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  .entry-desc,
+  .containment-block,
+  .addenda-block,
+  .doc-fields {
+    page-break-inside: avoid;
+  }
+}
